@@ -1,0 +1,169 @@
+:root {
+    --ion-color-primary: #3880ff;
+    --ion-color-primary-rgb: 56, 128, 255;
+    --ion-color-primary-contrast: #ffffff;
+    --ion-color-primary-contrast-rgb: 255, 255, 255;
+    --ion-color-primary-shade: #3170e0;
+    --ion-color-primary-tint: #4c8dff;
+
+    --ion-color-secondary: #0cd1e8;
+    --ion-color-secondary-rgb: 12, 209, 232;
+    --ion-color-secondary-contrast: #ffffff;
+    --ion-color-secondary-contrast-rgb: 255, 255, 255;
+    --ion-color-secondary-shade: #0aa5cc;
+    --ion-color-secondary-tint: #24d6ec;
+
+    --ion-color-tertiary: #7044ff;
+    --ion-color-tertiary-rgb: 112, 68, 255;
+    --ion-color-tertiary-contrast: #ffffff;
+    --ion-color-tertiary-contrast-rgb: 255, 255, 255;
+    --ion-color-tertiary-shade: #633ce0;
+    --ion-color-tertiary-tint: #7e57ff;
+
+    --ion-color-success: #10dc60;
+    --ion-color-success-rgb: 16, 220, 96;
+    --ion-color-success-contrast: #ffffff;
+    --ion-color-success-contrast-rgb: 255, 255, 255;
+    --ion-color-success-shade: #0ec254;
+    --ion-color-success-tint: #28e270;
+
+    --ion-color-warning: #ffce00;
+    --ion-color-warning-rgb: 255, 206, 0;
+    --ion-color-warning-contrast: #ffffff;
+    --ion-color-warning-contrast-rgb: 255, 255, 255;
+    --ion-color-warning-shade: #e0b500;
+    --ion-color-warning-tint: #ffd31a;
+
+    --ion-color-danger: #f04141;
+    --ion-color-danger-rgb: 240, 65, 65;
+    --ion-color-danger-contrast: #ffffff;
+    --ion-color-danger-contrast-rgb: 255, 255, 255;
+    --ion-color-danger-shade: #d13636;
+    --ion-color-danger-tint: #f25454;
+
+    --ion-color-light: #f4f5f8;
+    --ion-color-light-rgb: 244, 245, 248;
+    --ion-color-light-contrast: #000000;
+    --ion-color-light-contrast-rgb: 0, 0, 0;
+    --ion-color-light-shade: #d7d8da;
+    --ion-color-light-tint: #f5f6f9;
+
+    --ion-color-medium: #989aa2;
+    --ion-color-medium-rgb: 152, 154, 162;
+    --ion-color-medium-contrast: #ffffff;
+    --ion-color-medium-contrast-rgb: 255, 255, 255;
+    --ion-color-medium-shade: #86888f;
+    --ion-color-medium-tint: #a2a4ab;
+
+    --ion-color-dark: #222428;
+    --ion-color-dark-rgb: 34, 36, 40;
+    --ion-color-dark-contrast: #ffffff;
+    --ion-color-dark-contrast-rgb: 255, 255, 255;
+    --ion-color-dark-shade: #1e2023;
+    --ion-color-dark-tint: #383a3e;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --ion-color-primary: #428cff;
+        --ion-color-primary-rgb: 66, 140, 255;
+        --ion-color-primary-contrast: #ffffff;
+        --ion-color-primary-contrast-rgb: 255, 255, 255;
+        --ion-color-primary-shade: #3a78e0;
+        --ion-color-primary-tint: #5598ff;
+
+        --ion-color-secondary: #50c8ff;
+        --ion-color-secondary-rgb: 80, 200, 255;
+        --ion-color-secondary-contrast: #ffffff;
+        --ion-color-secondary-contrast-rgb: 255, 255, 255;
+        --ion-color-secondary-shade: #46b0e0;
+        --ion-color-secondary-tint: #62ceff;
+
+        --ion-color-tertiary: #6a64ff;
+        --ion-color-tertiary-rgb: 106, 100, 255;
+        --ion-color-tertiary-contrast: #ffffff;
+        --ion-color-tertiary-contrast-rgb: 255, 255, 255;
+        --ion-color-tertiary-shade: #5d59e0;
+        --ion-color-tertiary-tint: #7974ff;
+
+        --ion-color-success: #1fdf64;
+        --ion-color-success-rgb: 31, 223, 100;
+        --ion-color-success-contrast: #000000;
+        --ion-color-success-contrast-rgb: 0, 0, 0;
+        --ion-color-success-shade: #1cc058;
+        --ion-color-success-tint: #36e274;
+
+        --ion-color-warning: #ffd534;
+        --ion-color-warning-rgb: 255, 213, 52;
+        --ion-color-warning-contrast: #000000;
+        --ion-color-warning-contrast-rgb: 0, 0, 0;
+        --ion-color-warning-shade: #e0bb2e;
+        --ion-color-warning-tint: #ffd948;
+
+        --ion-color-danger: #ff4961;
+        --ion-color-danger-rgb: 255, 73, 97;
+        --ion-color-danger-contrast: #ffffff;
+        --ion-color-danger-contrast-rgb: 255, 255, 255;
+        --ion-color-danger-shade: #e04155;
+        --ion-color-danger-tint: #ff5b72;
+
+        --ion-color-light: #222428;
+        --ion-color-light-rgb: 34, 36, 40;
+        --ion-color-light-contrast: #ffffff;
+        --ion-color-light-contrast-rgb: 0, 0, 0;
+        --ion-color-light-shade: #d7d8da;
+        --ion-color-light-tint: #f5f6f9;
+
+        --ion-color-medium: #989aa2;
+        --ion-color-medium-rgb: 152, 154, 162;
+        --ion-color-medium-contrast: #ffffff;
+        --ion-color-medium-contrast-rgb: 255, 255, 255;
+        --ion-color-medium-shade: #86888f;
+        --ion-color-medium-tint: #a2a4ab;
+
+        --ion-color-dark: #f4f5f8;
+        --ion-color-dark-rgb: 244, 245, 248;
+        --ion-color-dark-contrast: #000000;
+        --ion-color-dark-contrast-rgb: 0, 0, 0;
+        --ion-color-dark-shade: #d7d8da;
+        --ion-color-dark-tint: #f5f6f9;
+    }
+}
+/* VARIABLES CON PSICOLOGÍA DEL COLOR APLICADA */
+:root {
+    /* Marca / Confianza Médica */
+    --color-primary: #007bf5; /* Azul Clínico / Tecnológico */
+    --color-primary-hover: #0056b3; /* Azul Oscuro Interactivo */
+    --color-primary-light: #eff6ff; /* Azul Pastel para fondos suaves */
+    --color-primary-border: #bfdbfe; /* Borde sutil de acento */
+
+    /* Ahorro / Éxito */
+    --color-success: #10b981; /* Verde Esmeralda (Dinero/Stock) */
+
+    /* Fondos y Estructuras */
+    --color-bg-app: #f8fafc; /* Gris Claro Neutro (Evita fatiga visual) */
+    --color-bg-surface: #ffffff; /* Blanco Puro (Higiene/Claridad) */
+    --color-border: #e2e8f0; /* Gris Neutro Divisor */
+
+    /* Tipografía y Contraste */
+    --color-text-main: #1e293b; /* Gris Oscuro Pizarra (Lectura ágil) */
+    --color-text-muted: #64748b; /* Gris Azulado Secundario */
+
+    /* Sombras y Tipografía */
+    --shadow-header: 0 4px 12px rgba(0, 123, 245, 0.08);
+    --font-main:
+        -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
+        sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: var(--font-main);
+    background-color: var(--color-bg-app);
+    color: var(--color-text-main);
+}
