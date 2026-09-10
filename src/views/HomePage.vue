@@ -1,25 +1,257 @@
 <script setup lang="ts">
-import TheHeader from "@/components/TheHeader.vue";
-import Filters from "@/components/Filters.vue";
-import PanelFlotante from "@/components/PanelFlotante.vue";
-import Results from "@/components/Results.vue";
+import { IonContent, IonPage } from '@ionic/vue'
+import TheHeader from "@/components/layout/TheHeader.vue";
+import Filters from "@/components/features/Filters.vue";
+import Results from "@/components/features/Results.vue";
+import MedicamentosModal from "@/components/features/MedicamentosModal.vue";
+import { useFiltersStore } from '@/stores'
+import { useCartStore } from '@/stores'
+import { onMounted } from 'vue'
+const store = useFiltersStore()
+const cartStore = useCartStore()
+
+onMounted(async () => {
+    await store.loadMedicamentos()
+    cartStore.syncCartWithProducts(store.products)
+})
 </script>
 
 <template>
-    <div class="page-container">
+    <IonPage>
+        <IonContent class="page-content">
+            <div class="content-spacer">
+                <Filters />
+                <Results />
+            </div>
+        </IonContent>
         <TheHeader />
-        <Filters />
-        <Results />
-        <PanelFlotante />
-    </div>
+        <div
+            id="cartModal"
+            class="cart-modal-backdrop"
+            :class="{ hidden: !cartStore.isCartModalOpen }"
+            @click.self="cartStore.closeCartModal()"
+        >
+            <div class="cart-modal-content">
+                <div class="modal-header">
+                    <h3>Mi Lista de Compra</h3>
+                    <button
+                        id="btnCloseCart"
+                        class="btn-close-modal"
+                        @click="cartStore.closeCartModal()"
+                    >
+                        <span class="material-symbols-outlined">close</span>
+                    </button>
+                </div>
+
+                <div class="modal-body">
+                    <div
+                        v-for="item in cartStore.cartItems"
+                        :key="item.id"
+                        class="cart-item"
+                    >
+                        <div class="item-details">
+                            <p class="item-title">
+                                {{ item.nombre_producto_farmacia }}
+                            </p>
+                            <p class="item-pharmacy">
+                                Comprar en:
+                                <strong>{{ item.laboratorio }}</strong>
+                            </p>
+                        </div>
+                        <div class="item-action">
+                            <span class="item-price"
+                                >Bs {{ item.precio_bs.toFixed(2) }}</span
+                            >
+                            <button
+                                class="btn-remove"
+                                @click="cartStore.removeFromCart(item.id)"
+                                aria-label="Eliminar producto"
+                            >
+                                <span class="material-symbols-outlined">delete</span>
+                            </button>
+                            <a
+                                :href="item.url_producto"
+                                target="_blank"
+                                rel="noopener"
+                                class="btn-redirect"
+                            >
+                                <span>Ir a Farmacia</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <p class="redirect-disclaimer">
+                        <span class="material-symbols-outlined disclaimer-icon"
+                            >info</span
+                        >
+                        Al pulsar "Ir a Farmacia" serás redirigido a la
+                        plataforma oficial correspondiente.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <MedicamentosModal />
+    </IonPage>
 </template>
 
 <style scoped>
-.page-container {
+.page-content {
+    --background: var(--color-bg-app);
+}
+
+.content-spacer {
     padding-top: 125px;
-    padding-bottom: 80px;
-    min-height: 100vh;
+    padding-bottom: 20px;
+}
+
+.cart-modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(4px);
+    z-index: 2000;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+}
+.cart-modal-backdrop.hidden {
+    display: none;
+}
+.cart-modal-content {
+    background-color: var(--color-bg-surface);
+    width: 100%;
+    max-width: 600px;
+    border-radius: 20px 20px 0 0;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    max-height: 80vh;
+    overflow-y: auto;
+    animation: slideUp 0.3s ease-out;
+}
+@keyframes slideUp {
+    from {
+        transform: translateY(100%);
+    }
+    to {
+        transform: translateY(0);
+    }
+}
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: 12px;
+}
+.modal-header h3 {
+    font-size: 1.1rem;
+    color: var(--color-text-main);
+}
+.btn-close-modal {
+    background: transparent;
+    border: none;
+    color: var(--color-text-muted);
+    cursor: pointer;
+}
+.modal-body {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+.cart-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px;
     background-color: var(--color-bg-app);
-    position: relative;
+    border-radius: 12px;
+    border: 1px solid var(--color-border);
+}
+.item-details {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+.item-title {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--color-text-main);
+}
+.item-pharmacy {
+    font-size: 0.8rem;
+    color: var(--color-text-muted);
+}
+.item-action {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 6px;
+}
+.item-price {
+    font-size: 1rem;
+    font-weight: 800;
+    color: var(--color-text-main);
+}
+.btn-redirect {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background-color: var(--color-primary);
+    color: #ffffff;
+    text-decoration: none;
+    padding: 6px 10px;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+.btn-remove {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: 1px solid var(--color-border);
+    color: var(--color-text-muted);
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    align-self: flex-end;
+}
+.btn-remove:hover {
+    background-color: #fee2e2;
+    border-color: #ef4444;
+    color: #ef4444;
+}
+.btn-remove .material-symbols-outlined {
+    font-size: 18px;
+}
+.modal-footer {
+    border-top: 1px solid var(--color-border);
+    padding-top: 12px;
+}
+.redirect-disclaimer {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+}
+.disclaimer-icon {
+    font-size: 16px;
+}
+@media (min-width: 640px) {
+    .cart-modal-backdrop {
+        align-items: center;
+    }
+    .cart-modal-content {
+        border-radius: 20px;
+    }
 }
 </style>

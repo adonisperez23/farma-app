@@ -1,48 +1,59 @@
 <script setup lang="ts">
-import { useCartStore } from '@/stores/cartStore'
-const store = useCartStore()
+import { useFiltersStore, useCartStore } from "@/stores";
+const store = useFiltersStore();
+const cartStore = useCartStore();
 </script>
 
 <template>
     <main class="results-container">
         <div class="results-header">
             <h2 class="results-title">
-                Resultados para "<span class="search-term">{{ store.searchQuery }}</span>"
+                Resultados para "<span class="search-term">{{
+                    store.searchQuery
+                }}</span
+                >"
             </h2>
-            <span class="sort-badge">
-                <span class="material-symbols-outlined sort-icon">sort</span>
-                Menor a mayor precio
-            </span>
         </div>
 
         <article
-            v-for="product in store.filteredProducts"
+            v-for="(product, index) in store.filteredProducts"
             :key="product.id"
             class="product-card"
-            :class="{ bestPrice: product.isBestPrice }"
+            :class="{ bestPrice: product.score_similitud >= 90 }"
         >
-            <div v-if="product.isBestPrice" class="card-tag">
-                <span class="material-symbols-outlined tag-icon">verified</span>
+            <div v-if="index === 0" class="card-tag">
                 <span>Mejor Precio</span>
             </div>
             <div class="card-content">
                 <div class="product-info">
-                    <h3 class="product-title">{{ product.title }}</h3>
-                    <p class="product-subtitle">{{ product.subtitle }}</p>
+                    <h3 class="product-title">
+                        {{ product.nombre_producto_farmacia }}
+                    </h3>
+                    <p class="product-subtitle">
+                        {{ product.laboratorio }} • {{ product.presentacion }}
+                    </p>
                     <div class="pharmacy-badge">
-                        <span class="material-symbols-outlined pharmacy-icon">store</span>
-                        <span class="pharmacy-name">{{ product.pharmacyName }}</span>
+                        <span class="pharmacy-name">{{
+                            product.farmacia
+                        }}</span>
                     </div>
                 </div>
                 <div class="product-pricing">
-                    <span class="price-amount">${{ product.price.toFixed(2) }}</span>
-                    <span class="stock-status in-stock" v-if="product.stock">
+                    <div class="price-amount">
+                        <div>Bs</div>
+                        <div>
+                            {{ product.precio_bs.toFixed(2) }}
+                        </div>
+                    </div>
+                    <span
+                        class="stock-status in-stock"
+                        v-if="product.disponibilidad"
+                    >
                         <span class="status-dot"></span> Disponible
                     </span>
                 </div>
             </div>
-            <button class="btn-add-cart" @click="store.addToCart(product)">
-                <span class="material-symbols-outlined">add_shopping_cart</span>
+            <button class="btn-add-cart" @click="cartStore.addToCart(product)">
                 <span>Agregar a mi lista</span>
             </button>
         </article>
@@ -138,6 +149,7 @@ const store = useCartStore()
     font-size: 1rem;
     font-weight: 700;
     color: var(--color-text-main);
+    margin: 0;
 }
 .product-subtitle {
     font-size: 0.8rem;
@@ -162,6 +174,9 @@ const store = useCartStore()
     gap: 2px;
 }
 .price-amount {
+    display: flex;
+    flex-direction: row;
+    align-items:center;
     font-size: 1.35rem;
     font-weight: 800;
     color: var(--color-text-main);

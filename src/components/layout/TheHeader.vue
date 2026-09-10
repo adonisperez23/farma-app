@@ -1,31 +1,28 @@
 <script setup lang="ts">
-import { useCartStore } from "@/stores/cartStore";
-const store = useCartStore();
+import { useFiltersStore } from "@/stores";
+import { useCartStore } from "@/stores";
+const store = useFiltersStore();
+const cartStore = useCartStore();
 </script>
 
 <template>
-    <!-- HEADER FIJO PWA -->
     <header class="pwa-header">
-        <!-- Fila Superior: Logotipo y Botón de Instalación -->
         <div class="header-top">
             <div class="brand">
                 <h1 class="brand-title">PharMatch</h1>
             </div>
-            <!-- Botón de instalación PWA -->
             <button
-                id="btnInstall"
-                class="btn-install"
-                aria-label="Instalar aplicación"
-                @click="store.updateSearchQuery('')"
+                class="btn-cart"
+                @click="cartStore.toggleCartModal()"
+                aria-label="Ver mi lista"
             >
-                <span class="material-symbols-outlined icon-small"
-                    >download</span
-                >
-                <span class="btn-text">Instalar</span>
+                <span class="cart-count" v-if="cartStore.cartCount > 0">{{
+                    cartStore.cartCount
+                }}</span>
+                <span class="btn-cart-text">Ver mi lista</span>
             </button>
         </div>
 
-        <!-- Barra de Búsqueda -->
         <div class="search-container">
             <span class="material-symbols-outlined search-icon"></span>
             <input
@@ -75,11 +72,6 @@ const store = useCartStore();
     display: flex;
     align-items: center;
     gap: 8px;
-    color: var(--color-primary);
-}
-
-.logo-icon {
-    font-size: 28px;
     color: var(--color-primary);
 }
 
@@ -171,5 +163,51 @@ const store = useCartStore();
 
 .hidden {
     display: none;
+}
+
+.btn-cart {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background-color: var(--color-primary-light);
+    color: var(--color-primary);
+    border: 1px solid var(--color-primary-border);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    position: relative;
+}
+
+.btn-cart:hover {
+    background-color: var(--color-primary);
+    color: var(--color-bg-surface);
+}
+
+.cart-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--color-success);
+    color: #ffffff;
+    font-size: 0.7rem;
+    font-weight: 800;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    min-width: 20px;
+    position: absolute;
+    top: -6px;
+    right: -6px;
+}
+
+.btn-cart .material-symbols-outlined {
+    font-size: 20px;
+}
+
+.btn-cart-text {
+    font-size: 0.85rem;
 }
 </style>
