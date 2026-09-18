@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { IonContent, IonPage } from '@ionic/vue'
-import TheHeader from "@/components/layout/TheHeader.vue";
 import Filters from "@/components/features/Filters.vue";
 import Results from "@/components/features/Results.vue";
 import MedicamentosModal from "@/components/features/MedicamentosModal.vue";
@@ -20,11 +19,30 @@ onMounted(async () => {
     <IonPage>
         <IonContent class="page-content">
             <div class="content-spacer">
+                <div class="search-container">
+                    <span class="material-symbols-outlined search-icon"></span>
+                    <input
+                        type="text"
+                        id="searchInput"
+                        class="search-input"
+                        placeholder="Buscar medicamento (ej. Losartán 50mg)..."
+                        autocomplete="off"
+                        v-model="store.searchQuery"
+                    />
+                    <button
+                        id="btnClear"
+                        class="btn-clear"
+                        :class="{ hidden: store.searchQuery.length === 0 }"
+                        aria-label="Limpiar búsqueda"
+                        @click="store.updateSearchQuery('')"
+                    >
+                        <span class="material-symbols-outlined">cancel</span>
+                    </button>
+                </div>
                 <Filters />
                 <Results />
             </div>
         </IonContent>
-        <TheHeader />
         <div
             id="cartModal"
             class="cart-modal-backdrop"
@@ -33,13 +51,13 @@ onMounted(async () => {
         >
             <div class="cart-modal-content">
                 <div class="modal-header">
-                    <h3>Mi Lista de Compra</h3>
+                    <h3>Mi Lista de medicamentos</h3>
                     <button
                         id="btnCloseCart"
                         class="btn-close-modal"
                         @click="cartStore.closeCartModal()"
                     >
-                        <span class="material-symbols-outlined">close</span>
+                        <span class="material-symbols-outlined">Cerrar</span>
                     </button>
                 </div>
 
@@ -67,7 +85,7 @@ onMounted(async () => {
                                 @click="cartStore.removeFromCart(item.id)"
                                 aria-label="Eliminar producto"
                             >
-                                <span class="material-symbols-outlined">delete</span>
+                                <span class="material-symbols-outlined">Eliminar</span>
                             </button>
                             <a
                                 :href="item.url_producto"
@@ -103,7 +121,7 @@ onMounted(async () => {
 
 .content-spacer {
     padding-top: 125px;
-    padding-bottom: 20px;
+    padding-bottom: 100px;
 }
 
 .cart-modal-backdrop {
@@ -246,6 +264,64 @@ onMounted(async () => {
 .disclaimer-icon {
     font-size: 16px;
 }
+.search-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.search-icon {
+    position: absolute;
+    left: 12px;
+    color: var(--color-text-muted);
+    pointer-events: none;
+    font-size: 20px;
+}
+
+.search-input {
+    width: 100%;
+    padding: 10px 40px 10px 40px;
+    font-size: 0.95rem;
+    color: var(--color-text-main);
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    background-color: #f1f5f9;
+    outline: none;
+    transition: all 0.2s ease;
+}
+
+.search-input::placeholder {
+    color: var(--color-text-muted);
+}
+
+.search-input:focus {
+    background-color: var(--color-bg-surface);
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(0, 123, 245, 0.15);
+}
+
+.btn-clear {
+    position: absolute;
+    right: 10px;
+    background: transparent;
+    border: none;
+    color: var(--color-text-muted);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2px;
+}
+
+.btn-clear:hover {
+    color: var(--color-text-main);
+}
+
+.hidden {
+    display: none;
+}
+
 @media (min-width: 640px) {
     .cart-modal-backdrop {
         align-items: center;

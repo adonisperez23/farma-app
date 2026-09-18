@@ -19,7 +19,6 @@ const cartStore = useCartStore();
             v-for="(product, index) in store.filteredProducts"
             :key="product.id"
             class="product-card"
-            :class="{ bestPrice: product.score_similitud >= 90 }"
         >
             <div v-if="index === 0" class="card-tag">
                 <span>Mejor Precio</span>
@@ -43,6 +42,12 @@ const cartStore = useCartStore();
                         <div>Bs</div>
                         <div>
                             {{ product.precio_bs.toFixed(2) }}
+                        </div>
+                    </div>
+                    <div v-if="store.refRate" class="price-usd">
+                        <div>REF</div>
+                        <div>
+                            {{ (product.precio_bs / store.refRate).toFixed(2) }}
                         </div>
                     </div>
                     <span
@@ -176,10 +181,28 @@ const cartStore = useCartStore();
 .price-amount {
     display: flex;
     flex-direction: row;
-    align-items:center;
+    align-items: center;
     font-size: 1.35rem;
     font-weight: 800;
     color: var(--color-text-main);
+}
+.price-usd {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-primary);
+    gap: 4px;
+}
+.usd-filter-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.75rem;
+    color: var(--color-primary);
+    font-weight: 600;
+    margin-top: 4px;
 }
 .stock-status {
     display: flex;

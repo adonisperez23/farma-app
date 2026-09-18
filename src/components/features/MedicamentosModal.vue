@@ -22,9 +22,6 @@ function selectMedicamento(med: { principioActivo: string }) {
             v-if="store.medicamentosPorPatologia.length === 0"
             class="empty-state"
         >
-            <span class="material-symbols-outlined empty-icon"
-                >medical_services</span
-            >
             <p>No hay medicamentos base registrados para esta patología.</p>
         </div>
 

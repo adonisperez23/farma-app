@@ -30,6 +30,15 @@ export const useFiltersStore = defineStore('filters', () => {
     const selectedDosis = ref<string[]>([])
     const selectedCantidad = ref<string>('todos')
 
+    const refRate = computed(() => {
+        return products.value.find(p => p.tasa_bcv_usd !== null)?.tasa_bcv_usd ?? null
+    })
+
+    function getPrecioUsd(product: MedicamentoPrecioApi): number | null {
+        if (!refRate.value) return null
+        return product.precio_bs / refRate.value
+    }
+
     const filteredProducts = computed(() => {
         const query = searchQuery.value.toLowerCase()
         const parsed = parsedQuery.value
@@ -50,7 +59,7 @@ export const useFiltersStore = defineStore('filters', () => {
                 selectedDosis.value.some(d => productDosisArray.some(pd => pd.toLowerCase() === normalizeDosis(d).toLowerCase()))
             const matchesCantidad = selectedCantidad.value === 'todos' ||
                 matchesCantidadRange(p.cantidad_unidades, selectedCantidad.value)
-            return matchesPharmacy && matchesSearch && matchesDoseFromQuery && matchesSelectedDosis && matchesCantidad
+            return matchesPharmacy && matchesSearch && matchesDoseFromQuery && matchesSelectedDosis && matchesCantidad && p.disponibilidad
         })
     })
 
@@ -201,5 +210,7 @@ function toggleDosis(dosis: string) {
         clearFilters,
         openMedicamentosModal,
         closeMedicamentosModal,
+        refRate,
+        getPrecioUsd,
     }
 })
