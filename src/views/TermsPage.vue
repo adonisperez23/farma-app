@@ -233,7 +233,7 @@ import {
                     </p>
                     <p>
                         <strong>Correo Electrónico de Contacto:</strong>
-                        <a href="mailto:contacto@pharmatch.com"
+                        <a href="mailto:contacto@pharmatch.info"
                             >contacto@pharmatch.info</a
                         >
                     </p>

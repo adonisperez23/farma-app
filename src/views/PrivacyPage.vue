@@ -113,7 +113,7 @@ import { IonContent, IonPage, IonHeader, IonToolbar, IonTitle, IonButtons, IonBa
                     <p>
                         Si tiene preguntas, inquietudes o solicitudes relacionadas con esta Política de Privacidad, el tratamiento de datos técnicos o el funcionamiento general de la plataforma, puede ponerse en contacto con el equipo de soporte a través de nuestro canal de atención oficial:
                     </p>
-                    <p><strong>Correo Electrónico Soporte:</strong> soporte@pharmatch.info</p>
+                    <p><strong>Correo Electrónico</strong> contacto@pharmatch.info</p>
                     <p><strong>Sitio Web:</strong> <a href="https://pharmatch.info">pharmatch.info</a></p>
                 </section>
             </div>
