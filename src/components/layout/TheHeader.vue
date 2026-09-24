@@ -1,8 +1,15 @@
 <script setup lang="ts">
 import { useRouter } from "vue-router";
-import { useCartStore } from "@/stores";
+import { useCartStore, useFiltersStore } from "@/stores";
 const cartStore = useCartStore();
+const filterStore = useFiltersStore();
 const router = useRouter();
+
+function onToggleCartModal() {
+    filterStore.isMedicamentosModalOpen = false;
+    filterStore.selectedPathologyForModal = null;
+    cartStore.toggleCartModal();
+}
 </script>
 
 <template>
@@ -20,7 +27,7 @@ const router = useRouter();
             <div class="header-actions">
                 <button
                     class="btn-cart"
-                    @click="cartStore.toggleCartModal()"
+                    @click="onToggleCartModal"
                     aria-label="Ver mi lista"
                 >
                     <span class="cart-count" v-if="cartStore.cartCount > 0">{{

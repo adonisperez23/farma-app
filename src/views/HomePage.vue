@@ -73,7 +73,7 @@ onMounted(async () => {
                             </p>
                             <p class="item-pharmacy">
                                 Comprar en:
-                                <strong>{{ item.laboratorio }}</strong>
+                                <strong>{{ item.farmacia }}</strong>
                             </p>
                         </div>
                         <div class="item-action">

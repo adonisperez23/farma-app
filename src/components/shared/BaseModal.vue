@@ -10,7 +10,7 @@
                     <h3 class="modal-title">{{ title }}</h3>
                 </slot>
                 <button class="btn-close-modal" @click="$emit('close')">
-                    <span class="material-symbols-outlined">close</span>
+                    <span class="material-symbols-outlined">Cerrar</span>
                 </button>
             </div>
             <div class="modal-body">
@@ -108,6 +108,7 @@ defineEmits<{
     display: flex;
     flex-direction: column;
     gap: 12px;
+    /* padding-bottom: 100px; */
 }
 
 @media (min-width: 640px) {

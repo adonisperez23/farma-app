@@ -1,18 +1,33 @@
 <script setup lang="ts">
-import { useRouter } from 'vue-router'
-const router = useRouter()
+import { useRouter } from "vue-router";
+const router = useRouter();
 </script>
 
 <template>
     <footer class="pwa-footer">
         <div class="footer-content">
-            <div class="footer-brand">
-                <img src="/logo_pharmatch_with_name.svg" alt="MediAhorro" class="footer-logo" />
+            <div @click="router.push('/home')" class="footer-brand">
+                <a @click.prevent href="/inicio">
+                    <img
+                        src="/logo_pharmatch_with_name.svg"
+                        alt="MediAhorro"
+                        class="footer-logo"
+                    />
+                </a>
             </div>
             <nav class="footer-nav">
-                <button class="footer-link" @click="router.push('/terminos')">Términos y condiciones de uso</button>
-                <button class="footer-link" @click="router.push('/privacidad')">Políticas de Privacidad</button>
-                <button class="footer-link" @click="router.push('/aviso-legal')">Aviso Legal</button>
+                <button class="footer-link" @click="router.push('/terminos')">
+                    Términos y condiciones de uso
+                </button>
+                <button class="footer-link" @click="router.push('/privacidad')">
+                    Políticas de Privacidad
+                </button>
+                <button
+                    class="footer-link"
+                    @click="router.push('/aviso-legal')"
+                >
+                    Aviso Legal
+                </button>
             </nav>
         </div>
         <div class="footer-bottom">

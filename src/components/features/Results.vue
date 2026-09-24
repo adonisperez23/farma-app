@@ -5,7 +5,7 @@ const cartStore = useCartStore();
 </script>
 
 <template>
-    <main class="results-container">
+    <main v-if="store.searchQuery.length > 0" class="results-container">
         <div class="results-header">
             <h2 class="results-title">
                 Resultados para "<span class="search-term">{{
@@ -14,6 +14,10 @@ const cartStore = useCartStore();
                 >"
             </h2>
         </div>
+
+        <h2 v-if="store.filteredProducts.length === 0" class="results-title">
+            No hay medicamentos disponibles con este nombre
+        </h2>
 
         <article
             v-for="(product, index) in store.filteredProducts"
@@ -63,6 +67,10 @@ const cartStore = useCartStore();
             </button>
         </article>
     </main>
+    <h1 v-else class="results-container">
+        Inserte un nombre de medicamento en el buscador para mostrar
+        resultados...
+    </h1>
 </template>
 
 <script setup lang="ts"></script>

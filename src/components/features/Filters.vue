@@ -1,17 +1,17 @@
 <script setup lang="ts">
-import { useFiltersStore, getPatologiaFromCondition } from '@/stores'
-import { onMounted } from 'vue'
-const store = useFiltersStore()
+import { useFiltersStore, getPatologiaFromCondition } from "@/stores";
+import { onMounted } from "vue";
+const store = useFiltersStore();
 
 function handleConditionClick(condition: string) {
-    store.setCondition(condition)
-    const patologia = getPatologiaFromCondition(condition)
-    store.openMedicamentosModal(patologia)
+    store.setCondition(condition);
+    const patologia = getPatologiaFromCondition(condition);
+    store.openMedicamentosModal(patologia);
 }
 
 onMounted(() => {
-    store.loadMedicamentos()
-})
+    store.loadMedicamentos();
+});
 </script>
 
 <template>
@@ -24,7 +24,9 @@ onMounted(() => {
                         type="checkbox"
                         name="pharmacy"
                         value="Farmatodo"
-                        :checked="store.selectedPharmacies.includes('Farmatodo')"
+                        :checked="
+                            store.selectedPharmacies.includes('Farmatodo')
+                        "
                         @change="store.togglePharmacy('Farmatodo')"
                     />
                     <span class="custom-checkbox"></span>
@@ -57,7 +59,9 @@ onMounted(() => {
                         type="checkbox"
                         name="pharmacy"
                         value="Farmatina"
-                        :checked="store.selectedPharmacies.includes('Farmatina')"
+                        :checked="
+                            store.selectedPharmacies.includes('Farmatina')
+                        "
                         @change="store.togglePharmacy('Farmatina')"
                     />
                     <span class="custom-checkbox"></span>
@@ -71,7 +75,9 @@ onMounted(() => {
             <div class="pathology-carousel">
                 <button
                     class="chip-button"
-                    :class="{ active: store.selectedCondition === 'hipertension' }"
+                    :class="{
+                        active: store.selectedCondition === 'hipertension',
+                    }"
                     @click="handleConditionClick('hipertension')"
                 >
                     <span class="chip-icon">❤️</span>
@@ -85,12 +91,83 @@ onMounted(() => {
                     <span class="chip-icon">🩸</span>
                     <span>Diabetes</span>
                 </button>
+                <button
+                    class="chip-button"
+                    :class="{ active: store.selectedCondition === 'tiroides' }"
+                    @click="handleConditionClick('tiroides')"
+                >
+                    <span class="chip-icon">🩸</span>
+                    <span>Tiroides</span>
+                </button>
+                <button
+                    class="chip-button"
+                    :class="{
+                        active: store.selectedCondition === 'colesterol',
+                    }"
+                    @click="handleConditionClick('colesterol')"
+                >
+                    <span class="chip-icon">🫀</span>
+                    <span>Colesterol</span>
+                </button>
+                <button
+                    class="chip-button"
+                    :class="{
+                        active: store.selectedCondition === 'gastritis',
+                    }"
+                    @click="handleConditionClick('gastritis')"
+                >
+                    <span class="chip-icon">🤢</span>
+                    <span>gastritis</span>
+                </button>
+                <button
+                    class="chip-button"
+                    :class="{
+                        active: store.selectedCondition === 'asma',
+                    }"
+                    @click="handleConditionClick('asma')"
+                >
+                    <span class="chip-icon">🫁</span>
+                    <span>Asma</span>
+                </button>
+                <button
+                    class="chip-button"
+                    :class="{
+                        active: store.selectedCondition === 'artrosis',
+                    }"
+                    @click="handleConditionClick('artrosis')"
+                >
+                    <span class="chip-icon">🦴</span>
+                    <span>Artrosis</span>
+                </button>
+                <button
+                    class="chip-button"
+                    :class="{
+                        active: store.selectedCondition === 'malaria',
+                    }"
+                    @click="handleConditionClick('malaria')"
+                >
+                    <span class="chip-icon">🦟</span>
+                    <span>Malaria</span>
+                </button>
+                <button
+                    class="chip-button"
+                    :class="{
+                        active: store.selectedCondition === 'parasitosis',
+                    }"
+                    @click="handleConditionClick('parasitosis')"
+                >
+                    <span class="chip-icon">🪱</span>
+                    <span>Parasitosis</span>
+                </button>
             </div>
         </div>
 
-        <div v-if="store.availableDosis.length > 0" class="dosis-filter-container">
+        <div
+            v-if="store.availableDosis.length > 0"
+            class="dosis-filter-container"
+        >
             <span class="filter-label">Dosis:</span>
-            <div class="dosis-chips">
+            <div v-if="store.searchQuery.length > 0" class="dosis-chips">
                 <button
                     v-for="dosis in store.availableDosis"
                     :key="dosis"
@@ -109,7 +186,11 @@ onMounted(() => {
             <select
                 class="cantidad-select"
                 :value="store.selectedCantidad"
-                @change="store.setCantidadRange(($event.target as HTMLSelectElement).value)"
+                @change="
+                    store.setCantidadRange(
+                        ($event.target as HTMLSelectElement).value,
+                    )
+                "
             >
                 <option value="todos">Todos</option>
                 <option value="0-10">Menos de 10</option>
