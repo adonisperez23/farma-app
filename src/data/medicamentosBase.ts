@@ -1,4 +1,4 @@
-import { type MedicamentoBase } from '@/types'
+import { type MedicamentoBase } from "@/types";
 
 export const medicamentosBase: MedicamentoBase[] = [
     {
@@ -578,7 +578,7 @@ export const medicamentosBase: MedicamentoBase[] = [
     {
         id: "MED-ART-002",
         patologia: "Artrosis / Reumatología",
-        principioActivo: "Diclofenac Potásico / Sódico",
+        principioActivo: "Diclofenac Potásico",
         dosis: ["50mg", "75mg", "100mg"],
         alias: ["Cataflam", "Voltaren", "Clofen"],
         presentacionReferencia: 10,
@@ -649,13 +649,53 @@ export const medicamentosBase: MedicamentoBase[] = [
         presentacionReferencia: 10,
     },
     {
-        id: "MED-VEC-001",
-        patologia: "Infecciones Vectoriales / Malaria",
-        principioActivo: "Arteméter",
-        dosis: ["20mg", "80mg/ml"],
-        alias: [],
+        id: "MED-ART-011",
+        patologia: "Artrosis / Reumatología",
+        principioActivo: "Tiocolchicósido",
+        dosis: ["4mg"],
+        alias: ["Coltrax Compuesto"],
         presentacionReferencia: 10,
     },
+    {
+        id: "MED-ART-012",
+        patologia: "Artrosis / Reumatología",
+        principioActivo: "Ibuprofeno",
+        dosis: ["200mg", "400mg", "600mg", "800mg", "100mg/5ml Suspension"],
+        alias: ["Brufen", "Ibulet", "Pediaprofen", "Advil"],
+        presentacionReferencia: 10,
+    },
+    {
+        id: "MED-ART-013",
+        patologia: "Artrosis / Reumatología",
+        principioActivo: "Ibuprofeno + Tiocolchicósido",
+        dosis: ["400mg/4mg", "600mg/4mg"],
+        alias: ["Brufen", "Ibulet", "Pediaprofen", "Advil"],
+        presentacionReferencia: 10,
+    },
+    {
+        id: "MED-ART-014",
+        patologia: "Artrosis / Reumatología",
+        principioActivo: "Diclofenac Sódico",
+        dosis: ["50mg", "100mg"],
+        alias: ["Cataflam", "Voltaren", "Clofen"],
+        presentacionReferencia: 10,
+    },
+    {
+        id: "MED-ART-015",
+        patologia: "Artrosis / Reumatología",
+        principioActivo: "Diclofenac Potásico + Tiocolchicósido",
+        dosis: ["50mg/4mg"],
+        alias: ["Flogodil"],
+        presentacionReferencia: 10,
+    },
+    // {
+    //     id: "MED-VEC-001",
+    //     patologia: "Infecciones Vectoriales / Malaria",
+    //     principioActivo: "Arteméter",
+    //     dosis: ["20mg", "80mg/ml"],
+    //     alias: [],
+    //     presentacionReferencia: 10,
+    // },
     {
         id: "MED-VEC-002",
         patologia: "Infecciones Vectoriales / Malaria",
@@ -762,4 +802,4 @@ export const medicamentosBase: MedicamentoBase[] = [
         alias: ["Flagystatin"],
         presentacionReferencia: 10,
     },
-]
+];

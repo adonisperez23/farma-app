@@ -1,18 +1,18 @@
 <script setup lang="ts">
-import { IonContent, IonPage } from '@ionic/vue'
+import { IonContent, IonPage } from "@ionic/vue";
 import Filters from "@/components/features/Filters.vue";
 import Results from "@/components/features/Results.vue";
 import MedicamentosModal from "@/components/features/MedicamentosModal.vue";
-import { useFiltersStore } from '@/stores'
-import { useCartStore } from '@/stores'
-import { onMounted } from 'vue'
-const store = useFiltersStore()
-const cartStore = useCartStore()
+import { useFiltersStore } from "@/stores";
+import { useCartStore } from "@/stores";
+import { onMounted } from "vue";
+const store = useFiltersStore();
+const cartStore = useCartStore();
 
 onMounted(async () => {
-    await store.loadMedicamentos()
-    cartStore.syncCartWithProducts(store.products)
-})
+    await store.loadMedicamentos();
+    cartStore.syncCartWithProducts(store.products);
+});
 </script>
 
 <template>
@@ -85,7 +85,9 @@ onMounted(async () => {
                                 @click="cartStore.removeFromCart(item.id)"
                                 aria-label="Eliminar producto"
                             >
-                                <span class="material-symbols-outlined">Eliminar</span>
+                                <span class="material-symbols-outlined"
+                                    >Eliminar</span
+                                >
                             </button>
                             <a
                                 :href="item.url_producto"
@@ -117,6 +119,11 @@ onMounted(async () => {
 <style scoped>
 .page-content {
     --background: var(--color-bg-app);
+    width: 100%;
+    height: 100vh; /* Alternativa moderna recomendada: 100dvh */
+    height: 100dvh; /* dvh = Dynamic Viewport Height */
+    overflow-y: auto; /* El scroll ocurre aquí */
+    -webkit-overflow-scrolling: touch; /* Scroll suave en dispositivos iOS */
 }
 
 .content-spacer {

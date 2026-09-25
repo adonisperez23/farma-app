@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useFiltersStore, getPatologiaFromCondition } from "@/stores";
-import { onMounted } from "vue";
+import { onMounted , ref} from "vue";
 const store = useFiltersStore();
 
 function handleConditionClick(condition: string) {
@@ -12,11 +12,14 @@ function handleConditionClick(condition: string) {
 onMounted(() => {
     store.loadMedicamentos();
 });
+
+const is_filter_displayed = ref(true)
+
 </script>
 
 <template>
     <section class="filters-section">
-        <div class="pharmacy-filter-container">
+        <div v-if="is_filter_displayed" class="pharmacy-filter-container" >
             <span class="filter-label">Farmacias:</span>
             <div class="pharmacy-checkboxes">
                 <label class="checkbox-tag">
@@ -70,7 +73,7 @@ onMounted(() => {
             </div>
         </div>
 
-        <div class="pathology-filter-container">
+        <div v-if="is_filter_displayed" class="pathology-filter-container">
             <span class="filter-label">Condición rápida:</span>
             <div class="pathology-carousel">
                 <button
@@ -96,7 +99,7 @@ onMounted(() => {
                     :class="{ active: store.selectedCondition === 'tiroides' }"
                     @click="handleConditionClick('tiroides')"
                 >
-                    <span class="chip-icon">🩸</span>
+                    <span class="chip-icon">🦋</span>
                     <span>Tiroides</span>
                 </button>
                 <button
@@ -163,11 +166,13 @@ onMounted(() => {
         </div>
 
         <div
-            v-if="store.availableDosis.length > 0"
+            v-if="store.availableDosis.length > 0 && store.searchQuery.length > 0 && is_filter_displayed "
             class="dosis-filter-container"
         >
-            <span class="filter-label">Dosis:</span>
-            <div v-if="store.searchQuery.length > 0" class="dosis-chips">
+            <span " class="filter-label"
+                >Dosis:</span
+            >
+            <div class="dosis-chips">
                 <button
                     v-for="dosis in store.availableDosis"
                     :key="dosis"
@@ -182,22 +187,29 @@ onMounted(() => {
         </div>
 
         <div class="cantidad-filter-container">
-            <span class="filter-label">Cantidad de comprimidos:</span>
-            <select
-                class="cantidad-select"
-                :value="store.selectedCantidad"
-                @change="
-                    store.setCantidadRange(
-                        ($event.target as HTMLSelectElement).value,
-                    )
-                "
-            >
-                <option value="todos">Todos</option>
-                <option value="0-10">Menos de 10</option>
-                <option value="10-30">10 - 30</option>
-                <option value="30-60">30 - 60</option>
-                <option value="60+">Más de 60</option>
-            </select>
+            <div v-if="is_filter_displayed">
+                <span class="filter-label">Cantidad de comprimidos:</span>
+                <select
+                    class="cantidad-select"
+                    :value="store.selectedCantidad"
+                    @change="
+                        store.setCantidadRange(
+                            ($event.target as HTMLSelectElement).value,
+                        )
+                    "
+                >
+                    <option value="todos">Todos</option>
+                    <option value="0-10">Menos de 10</option>
+                    <option value="10-30">10 - 30</option>
+                    <option value="30-60">30 - 60</option>
+                    <option value="60+">Más de 60</option>
+                </select>
+
+            </div>
+
+            <div>
+                <button @click="is_filter_displayed= !is_filter_displayed" class="btn-ocultar-filtro" >{{ is_filter_displayed?'Ocultar filtros':'Mostrar filtros' }}</button>
+            </div>
         </div>
     </section>
 </template>
@@ -286,9 +298,9 @@ onMounted(() => {
     transform: rotate(45deg);
 }
 .pathology-carousel {
-    display: flex;
+    display: block;
     gap: 8px;
-    overflow-x: auto;
+    /* overflow-x: auto; */
     scroll-behavior: smooth;
     padding-bottom: 4px;
     scrollbar-width: none;
@@ -350,5 +362,26 @@ onMounted(() => {
 .cantidad-select option {
     background-color: var(--color-bg-surface);
     color: var(--color-text-main);
+}
+
+.cantidad-filter-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    
+}
+
+.btn-ocultar-filtro {
+    background: transparent;
+    border: none;
+    color: var(--color-text-muted);
+    cursor: pointer;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background-color 0.2s ease;
 }
 </style>
