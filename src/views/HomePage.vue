@@ -102,6 +102,21 @@ onMounted(async () => {
                 </div>
 
                 <div class="modal-footer">
+                    <div class="total-text">
+                        <div class="total-ref">
+                            <h1>
+                                Total para compra: Bs {{ cartStore.totalCart }} 
+                            </h1>
+                            <h6>
+                                Ref
+                                {{
+                                    (
+                                        cartStore.totalCart / store.refRate!
+                                    ).toFixed(2)
+                                }}
+                            </h6>
+                        </div>
+                    </div>
                     <p class="redirect-disclaimer">
                         <span class="material-symbols-outlined disclaimer-icon"
                             >info</span
@@ -261,6 +276,19 @@ onMounted(async () => {
     border-top: 1px solid var(--color-border);
     padding-top: 12px;
 }
+.modal-footer .total-text,h1 {
+    display: flex;
+    flex-direction: row;
+    justify-content: end;
+    margin: 0;
+}
+.total-ref, h6 {
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+    margin: 0;
+}
+
 .redirect-disclaimer {
     display: flex;
     align-items: center;

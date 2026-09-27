@@ -643,7 +643,7 @@ export const medicamentosBase: MedicamentoBase[] = [
     {
         id: "MED-ART-010",
         patologia: "Artrosis / Reumatología",
-        principioActivo: "Ketoprofeno + Tiocolchicósido",
+        principioActivo: "Ketoprofeno + Tiocolchicosido",
         dosis: ["100mg/4mg"],
         alias: ["Coltrax Compuesto"],
         presentacionReferencia: 10,
@@ -651,7 +651,7 @@ export const medicamentosBase: MedicamentoBase[] = [
     {
         id: "MED-ART-011",
         patologia: "Artrosis / Reumatología",
-        principioActivo: "Tiocolchicósido",
+        principioActivo: "Tiocolchicosido",
         dosis: ["4mg"],
         alias: ["Coltrax Compuesto"],
         presentacionReferencia: 10,
@@ -667,7 +667,7 @@ export const medicamentosBase: MedicamentoBase[] = [
     {
         id: "MED-ART-013",
         patologia: "Artrosis / Reumatología",
-        principioActivo: "Ibuprofeno + Tiocolchicósido",
+        principioActivo: "Ibuprofeno + Tiocolchicosido",
         dosis: ["400mg/4mg", "600mg/4mg"],
         alias: ["Brufen", "Ibulet", "Pediaprofen", "Advil"],
         presentacionReferencia: 10,
@@ -683,7 +683,7 @@ export const medicamentosBase: MedicamentoBase[] = [
     {
         id: "MED-ART-015",
         patologia: "Artrosis / Reumatología",
-        principioActivo: "Diclofenac Potásico + Tiocolchicósido",
+        principioActivo: "Diclofenac Potásico + Tiocolchicosido",
         dosis: ["50mg/4mg"],
         alias: ["Flogodil"],
         presentacionReferencia: 10,

@@ -4,25 +4,26 @@ import BaseModal from "@/components/shared/BaseModal.vue";
 const store = useFiltersStore();
 
 function selectMedicamento(med: { principioActivo: string }) {
-    store.clearFilters()
-    store.updateSearchQuery(med.principioActivo)
-    store.closeMedicamentosModal()
+    store.clearFilters();
+    store.updateSearchQuery(med.principioActivo);
+    store.closeMedicamentosModal();
 }
 </script>
 
 <template>
     <BaseModal
         v-model="store.isMedicamentosModalOpen"
-        title="Medicamentos Base"
+        title="Medicamentos para:"
+        :subtitle="store.selectedPathologyForModal!"
         @close="store.closeMedicamentosModal()"
     >
-        <p class="modal-subtitle">{{ store.selectedPathologyForModal }}</p>
+        <!-- <p class="modal-subtitle">{{ store.selectedPathologyForModal }}</p> -->
 
         <div
             v-if="store.medicamentosPorPatologia.length === 0"
             class="empty-state"
         >
-            <p>No hay medicamentos base registrados para esta patología.</p>
+            <p>No hay medicamentos registrados para esta patología.</p>
         </div>
 
         <div v-else class="medicamento-list">
@@ -54,13 +55,6 @@ function selectMedicamento(med: { principioActivo: string }) {
 <script setup lang="ts"></script>
 
 <style scoped>
-.modal-subtitle {
-    font-size: 0.85rem;
-    color: var(--color-primary);
-    font-weight: 600;
-    margin-top: -8px;
-    margin-bottom: 8px;
-}
 .empty-state {
     display: flex;
     flex-direction: column;

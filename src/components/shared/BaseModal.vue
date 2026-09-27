@@ -7,7 +7,12 @@
         <div class="modal-content">
             <div class="modal-header">
                 <slot name="header">
-                    <h3 class="modal-title">{{ title }}</h3>
+                    <div class="modal-title-subtitle">
+                        <h3 class="modal-title">{{ title }}</h3>
+                        <p class="modal-subtitle">
+                            {{ subtitle }}
+                        </p>
+                    </div>
                 </slot>
                 <button class="btn-close-modal" @click="$emit('close')">
                     <span class="material-symbols-outlined">Cerrar</span>
@@ -22,13 +27,14 @@
 
 <script setup lang="ts">
 defineProps<{
-    modelValue: boolean
-    title?: string
-}>()
+    modelValue: boolean;
+    title?: string;
+    subtitle?: string;
+}>();
 
 defineEmits<{
-    close: []
-}>()
+    close: [];
+}>();
 </script>
 
 <style scoped>
@@ -75,16 +81,28 @@ defineEmits<{
 
 .modal-header {
     display: flex;
+    flex-direction: row;
+    gap: 130px;
     justify-content: space-between;
-    align-items: flex-start;
+    align-items: center;
     border-bottom: 1px solid var(--color-border);
-    padding-bottom: 12px;
+}
+
+.modal-title-subtitle {
+    display: block;
 }
 
 .modal-title {
     font-size: 1.1rem;
     font-weight: 700;
     color: var(--color-text-main);
+}
+
+.modal-subtitle {
+    font-size: 0.85rem;
+    color: var(--color-primary);
+    font-weight: 600;
+    margin-bottom: 8px;
 }
 
 .btn-close-modal {
@@ -108,6 +126,7 @@ defineEmits<{
     display: flex;
     flex-direction: column;
     gap: 12px;
+    overflow-y: auto;
     /* padding-bottom: 100px; */
 }
 
