@@ -4,7 +4,7 @@ import { getMedicamentosAxios, parseSearchQuery } from "@/services/apiAxios";
 import { medicamentosBase } from "@/data/medicamentosBase";
 import type { MedicamentoPrecioApi, NombreFarmacia } from "@/types";
 
-const pathologyMap: Record<string, string> = {
+export const pathologyMap: Record<string, string> = {
     hipertension: "Hipertensión",
     diabetes: "Diabetes Tipo 2",
     tiroides: "Hipotiroidismo",
@@ -14,6 +14,18 @@ const pathologyMap: Record<string, string> = {
     artrosis: "Artrosis / Reumatología",
     malaria: "Infecciones Vectoriales / Malaria",
     parasitosis: "Parasitosis Intestinal",
+    genericos: "Medicamentos Genéricos",
+    antibioticos: "Antibióticos / Infecciones Bacterianas",
+    alergias: "Alergias / Antihistamínicos",
+    gripe: "Gripe / Tos / Descongestionantes",
+    "salud femenina": "Salud Femenina / Anticoncepción",
+    antimicoticos: "Antimicóticos / Infecciones Fúngicas",
+    "salud mental": "Salud Mental / Neurología",
+    gastroenterologia: "Gastroenterología / Motilidad y Tránsito",
+    cardiovascular: "Cardiovascular / Anticoagulantes",
+    "salud prostatica": "Urología / Salud Prostática",
+    oftalmologia: "Oftalmología",
+    dermatologia: "Dermatología / Afecciones Cutáneas",
 };
 
 export function getPatologiaFromCondition(condition: string): string {

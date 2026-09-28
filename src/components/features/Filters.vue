@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useFiltersStore, getPatologiaFromCondition } from "@/stores";
 import { onMounted , ref} from "vue";
+import { pathologyMap } from "@/stores/filters";
 const store = useFiltersStore();
 
 function handleConditionClick(condition: string) {
@@ -77,16 +78,17 @@ const is_filter_displayed = ref(true)
             <span class="filter-label">Condición rápida:</span>
             <div class="pathology-carousel">
                 <button
+                    v-for="(patologia,name) in pathologyMap"
                     class="chip-button"
                     :class="{
-                        active: store.selectedCondition === 'hipertension',
+                        active: store.selectedCondition === patologia,
                     }"
-                    @click="handleConditionClick('hipertension')"
+                    @click="handleConditionClick(name)"
                 >
-                    <span class="chip-icon">❤️</span>
-                    <span>Hipertensión</span>
+                    <!-- <span class="chip-icon">❤️</span> -->
+                    <span>{{name}}</span>
                 </button>
-                <button
+                <!-- <button
                     class="chip-button"
                     :class="{ active: store.selectedCondition === 'diabetes' }"
                     @click="handleConditionClick('diabetes')"
@@ -161,7 +163,7 @@ const is_filter_displayed = ref(true)
                 >
                     <span class="chip-icon">🪱</span>
                     <span>Parasitosis</span>
-                </button>
+                </button> -->
             </div>
         </div>
 

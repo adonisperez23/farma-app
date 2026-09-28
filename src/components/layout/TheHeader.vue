@@ -10,6 +10,47 @@ function onToggleCartModal() {
     filterStore.selectedPathologyForModal = null;
     cartStore.toggleCartModal();
 }
+
+// let deferredPrompt:any
+// ;
+// const installBtn:HTMLElement = document.getElementById("btnInstall")!;
+
+// // 1. Escuchar cuando el navegador detecta que la PWA es instalable
+// window.addEventListener("beforeinstallprompt", (e) => {
+//     // Prevenir que Android/Chrome muestre su barra inferior automática por defecto
+//     e.preventDefault();
+//     // Guardar el evento para dispararlo más tarde
+//     deferredPrompt = e;
+//     // Mostrar tu botón personalizado en la interfaz
+//     installBtn.style.display = "block";
+// });
+
+// // 2. Manejar el clic en tu botón personalizado
+// installBtn.addEventListener("click", async () => {
+//     if (!deferredPrompt) return;
+
+//     // Mostrar la ventana emergente nativa de instalación
+//     deferredPrompt.prompt();
+
+//     // Esperar la respuesta del usuario
+//     const { outcome } = await deferredPrompt.userChoice;
+
+//     if (outcome === "accepted") {
+//         console.log("El usuario aceptó instalar la app");
+//     } else {
+//         console.log("El usuario rechazó la instalación");
+//     }
+
+//     // Limpiar la variable y ocultar el botón
+//     deferredPrompt = null;
+//     installBtn.style.display = "none";
+// });
+
+// // 3. Escuchar si la app ya fue instalada exitosamente
+// window.addEventListener("appinstalled", () => {
+//     console.log("PWA instalada con éxito");
+//     installBtn.style.display = "none";
+// });
 </script>
 
 <template>
@@ -23,6 +64,15 @@ function onToggleCartModal() {
                         class="brand-logo"
                     />
                 </a>
+            </div>
+            <div>
+                <!-- <button
+                    id="btnInstall"
+                    class="btn-install"
+                    style="display: none"
+                >
+                    <span>📥 Instalar App</span>
+                </button> -->
             </div>
             <div class="header-actions">
                 <button
