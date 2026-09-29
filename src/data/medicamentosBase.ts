@@ -1112,7 +1112,7 @@ export const medicamentosBase: MedicamentoBase[] = [
     {
         id: "MED-ATB-016",
         patologia: "Antibióticos / Infecciones Bacterianas",
-        principioActivo: "Ampicilina + Sulbactam (Sultamicilina)",
+        principioActivo: "Sultamicilina",
         dosis: ["375mg", "750mg", "1.5g Inyectable", "250mg/5ml"],
         alias: ["Unasyn", "Sultamicina", "Fipexiam"],
         presentacionReferencia: 10,
@@ -1339,7 +1339,7 @@ export const medicamentosBase: MedicamentoBase[] = [
     {
         id: "MED-GIN-002",
         patologia: "Salud Femenina / Anticoncepción",
-        principioActivo: "Levonorgestrel (Emergencia)",
+        principioActivo: "Levonorgestrel",
         dosis: ["0.75mg", "1.5mg"],
         alias: ["Postinor", "Glanique", "Secufem"],
         presentacionReferencia: 1,
@@ -1356,7 +1356,7 @@ export const medicamentosBase: MedicamentoBase[] = [
     {
         id: "MED-GIN-004",
         patologia: "Salud Femenina / Anticoncepción",
-        principioActivo: "Ciproterona + Etinilestradiol",
+        principioActivo: "Diane 35",
         dosis: ["2mg/0.035mg"],
         alias: ["Diane 35", "Dixi 35", "Mileva 35"],
         presentacionReferencia: 21,
@@ -1364,7 +1364,7 @@ export const medicamentosBase: MedicamentoBase[] = [
     {
         id: "MED-GIN-005",
         patologia: "Salud Femenina / Anticoncepción",
-        principioActivo: "Drospirenona + Etinilestradiol",
+        principioActivo: "Yasmin",
         dosis: ["3mg/0.03mg", "3mg/0.02mg"],
         alias: ["Yaz", "Yasmin", "Bellaface", "Tinelle"],
         presentacionReferencia: 28,
@@ -1434,7 +1434,7 @@ export const medicamentosBase: MedicamentoBase[] = [
     {
         id: "MED-PSI-001",
         patologia: "Salud Mental / Neurología",
-        principioActivo: "Ácido Valproico / Valproato de Sodio",
+        principioActivo: "Ácido Valproico",
         dosis: ["250mg", "500mg", "250mg/5ml"],
         alias: ["Depakine", "Valpron", "Valcote"],
         presentacionReferencia: 10,
@@ -1666,7 +1666,7 @@ export const medicamentosBase: MedicamentoBase[] = [
     {
         id: "MED-CRD-006",
         patologia: "Cardiovascular / Anticoagulantes",
-        principioActivo: "Ácido Acetilsalicílico + Clopidogrel",
+        principioActivo: "Ácido Acetilsalicílico",
         dosis: ["100mg/75mg"],
         alias: ["Plavix Plus", "Duoplavin"],
         presentacionReferencia: 10,
@@ -1737,7 +1737,7 @@ export const medicamentosBase: MedicamentoBase[] = [
     {
         id: "MED-OFT-002",
         patologia: "Oftalmología",
-        principioActivo: "Carboximetilcelulosa / Lágrimas Artificiales",
+        principioActivo: "Carboximetilcelulosa",
         dosis: ["0.5%", "1%"],
         alias: ["Refresh Tears", "Tears Naturale", "Lagricel", "Optive"],
         presentacionReferencia: 1,
@@ -1769,7 +1769,7 @@ export const medicamentosBase: MedicamentoBase[] = [
     {
         id: "MED-OFT-006",
         patologia: "Oftalmología",
-        principioActivo: "Timolol Oftálmico",
+        principioActivo: "Timolol",
         dosis: ["0.25%", "0.5%"],
         alias: ["Timoptol", "Imot"],
         presentacionReferencia: 1,
@@ -1777,7 +1777,7 @@ export const medicamentosBase: MedicamentoBase[] = [
     {
         id: "MED-OFT-007",
         patologia: "Oftalmología",
-        principioActivo: "Tobramicina Oftálmica",
+        principioActivo: "Tobramicina",
         dosis: ["0.3% Gotas"],
         alias: ["Tobrex", "Tobrasol"],
         presentacionReferencia: 1,
