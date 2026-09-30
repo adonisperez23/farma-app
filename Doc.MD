@@ -17,6 +17,8 @@
 | **Axios** | Cliente HTTP |
 | **Ionic Vue** | Componentes de UI y navegación PWA |
 | **Vite** | Bundler y dev server |
+| **vite-plugin-pwa** | Service worker, manifest e instalación de la PWA |
+| **Tailwind CSS v4** | Reset/preflight global (design tokens en `theme/variables.css`) |
 
 ---
 
@@ -30,7 +32,8 @@ src/
 │   │   ├── Results.vue
 │   │   └── MedicamentosModal.vue
 │   ├── layout/         # Layout de la aplicación
-│   │   └── TheHeader.vue
+│   │   ├── TheHeader.vue
+│   │   └── TheFooter.vue
 │   └── shared/         # Componentes reutilizables
 │       └── BaseModal.vue
 ├── stores/             # Stores de Pinia (estado global)
@@ -41,13 +44,17 @@ src/
 │   ├── apiAxios.ts
 │   └── api.ts
 ├── types/              # Tipos TypeScript
-│   └── MedicamentoPrecioApi.ts
+│   ├── MedicamentoPrecioApi.ts
+│   └── index.ts
 ├── data/               # Datos estáticos locales
 │   └── medicamentosBase.ts
 ├── views/              # Vistas de página
-│   └── HomePage.vue
+│   ├── HomePage.vue
+│   ├── TermsPage.vue
+│   ├── PrivacyPage.vue
+│   └── LegalNoticePage.vue
 ├── composables/        # Composables reutilizables
-│   └── useScrollDirection.ts
+│   └── usePwaInstall.ts
 ├── styles/             # Estilos globales
 ├── theme/              # Temas y variables CSS
 ├── router/             # Configuración de enrutamiento
@@ -167,6 +174,8 @@ Gestiona el carrito de compra ("Mi Lista de Compra").
 |---|---|---|
 | `cartItems` | `MedicamentoPrecioApi[]` | Items en el carrito |
 | `isCartModalOpen` | `boolean` | Estado del modal del carrito |
+| `isDuplicateModalOpen` | `boolean` | Estado del modal de "medicamento duplicado" |
+| `duplicateItemName` | `string` | Nombre del medicamento que intentó agregarse duplicado |
 
 **Computed:**
 - **`cartCount`** — Cantidad de items en el carrito
@@ -175,11 +184,12 @@ Gestiona el carrito de compra ("Mi Lista de Compra").
 
 | Función | Descripción |
 |---|---|
-| `addToCart(product)` | Agrega un producto al carrito (sin duplicados por laboratorio). Persiste en localStorage |
+| `addToCart(product)` | Agrega un producto al carrito. Si ya existe otro item con el mismo `nombre_producto_farmacia` **no lo agrega** y abre el modal de duplicado. Persiste en localStorage |
 | `removeFromCart(productId)` | Remueve un producto del carrito por ID. Persiste en localStorage |
 | `toggleCartModal()` | Abre/cierra el modal del carrito |
 | `closeCartModal()` | Cierra el modal |
-| `syncCartWithProducts(products)` | Valida el carrito contra la lista actual de productos. Descarta productos que ya no existen en la API y actualiza los que sí |
+| `closeDuplicateModal()` | Cierra el modal de medicamento duplicado |
+| `syncCartWithProducts(products)` | Valida el carrito contra la lista actual de productos: **descarta** los items cuyo `id` ya no existe (no modifica los items que siguen válidos) |
 
 **Persistencia en localStorage:**
 
@@ -229,7 +239,7 @@ Lista de resultados que muestra:
 - `store.filteredProducts` — Productos filtrados
 - Cada card muestra nombre, laboratorio, presentación, farmacia, precio y disponibilidad
 - Botón "Agregar a mi lista" que llama a `cartStore.addToCart(product)`
-- Productos con `score_similitud >= 90` se marcan como "Mejor Precio"
+- El **primer producto** de la lista (la API ordena por `precio_bs.asc`) muestra la etiqueta **"Mejor Precio"** (`v-if="index === 0"`)
 
 ### `MedicamentosModal.vue` (`src/components/features/MedicamentosModal.vue`)
 
@@ -240,10 +250,79 @@ Modal que muestra medicamentos base por patología:
 
 ### `TheHeader.vue` (`src/components/layout/TheHeader.vue`)
 
-Header fijo con:
-- Logo "PharMatch"
-- Campo de búsqueda enlazado a `store.searchQuery`
+Header fijo de la aplicación (no contiene campo de búsqueda; el buscador vive en `HomePage.vue`):
+- Logo "Pharmatch" (navega a `/home`)
+- **Botón "📥 Instalar App"** — visible en móvil siempre que la app no esté instalada y en escritorio sólo cuando Chrome la marca como instalable. Abre el diálogo nativo de instalación o, si la API no está disponible, un modal con instrucciones manuales (ver [Instalación de la PWA](#instalación-de-la-pwa))
 - Botón "Ver mi lista" con badge de conteo (`cartStore.cartCount`)
+- En pantallas ≤640px el botón de instalación pasa a una segunda fila a todo el ancho
+
+### `TheFooter.vue` (`src/components/layout/TheFooter.vue`)
+
+Footer con enlaces legales (términos, privacidad, aviso legal) y navegación a `/home`.
+
+### `BaseModal.vue` (`src/components/shared/BaseModal.vue`)
+
+Modal reutilizable con slots (`header`/default), props `modelValue`, `title`, `subtitle` y evento `close`. **Nota**: sólo emite `close`, no `update:modelValue` — usar `:modelValue` + `@close` en vez de `v-model`.
+
+---
+
+## Instalación de la PWA
+
+La app puede instalarse desde el navegador (Android/Chrome, escritorio) o añadirse a la pantalla de inicio (iOS/Safari).
+
+### Manifest (`vite.config.ts`)
+
+Configurado con `vite-plugin-pwa`:
+
+- `name` / `short_name`: **"Pharmatch"**, `description`, `theme_color: "#0ea5e9"`
+- **Iconos**: `/logo_pharmat.svg` declarado como `192x192` y `512x512` (`image/svg+xml`) — Chrome exige iconos de ambos tamaños para considerar la app instalable
+- `start_url: "/"`, `display: "standalone"`, `scope: "/"` y `background_color`: valores por defecto que inyecta el plugin
+- Service worker: `registerType: "autoUpdate"`, `navigateFallback: "/index.html"` (handler `fetch` de Workbox)
+
+### `index.html`
+
+- `<link rel="apple-touch-icon" href="/logo_pharmat.svg">` — iOS ignora los SVG para touch icons y usa un screenshot de la página como fallback
+
+### Composable: `usePwaInstall` (`src/composables/usePwaInstall.ts`)
+
+Singleton con listeners registrados a nivel de módulo (se registran al importar, antes de que el navegador emita el evento):
+
+| Elemento | Descripción |
+|---|---|
+| `beforeinstallprompt` | Hace `preventDefault()`, guarda el evento en `deferredPrompt` y activa `canInstall` |
+| `appinstalled` | Marca `isInstalled` y oculta el botón |
+| `display-mode: standalone` | Si la app se abre como instalada, oculta el botón |
+| `isIOS` | UA (`iPad\|iPhone\|iPod`) o iPadOS (`MacIntel` + `maxTouchPoints > 1`) |
+| `isAndroid` | UA (`/Android/i`) |
+| `isInstalled` | `navigator.standalone` (iOS) o `display-mode: standalone` (Chromium) |
+| `showInstallButton()` | `false` si está instalada; `true` siempre en iOS/Android; en escritorio sólo si `canInstall` |
+| `installApp()` | Con `deferredPrompt` → `prompt()` nativo (`"native"`); sin él en móvil → `"instructions"`; sin él en escritorio → `"none"` |
+
+### UI en `TheHeader.vue`
+
+- Botón **"📥 Instalar App"** con `v-if="showInstallButton()"`
+- Al clicar, `installApp()` decide:
+  - `"native"` → diálogo nativo de Chrome
+  - `"instructions"` → abre `BaseModal` con pasos manuales:
+    - **iOS**: Compartir (cuadrado con ↑) → "Añadir a pantalla de inicio" → "Añadir"
+    - **Android**: menú **⋮** → "Instalar aplicación" / "Añadir a pantalla de inicio" → "Instalar"
+
+### Requisitos de instalabilidad (Chrome)
+
+1. **Contexto seguro**: HTTPS o `localhost` — un `http://192.168.x.x` desde la LAN **no** cuenta: sin contexto seguro Chrome no registra el SW ni emite `beforeinstallprompt`
+2. Manifest válido: nombre, `start_url`, `display` e iconos 192 + 512
+3. Service worker registrado con handler `fetch`
+4. Chrome puede no reemitir `beforeinstallprompt` tras un rechazo previo (cooldown) — en móvil el botón sigue visible y muestra instrucciones manuales
+
+### Cómo probar en un móvil (dev)
+
+**Port-forwarding con DevTools:**
+
+1. PC: `pnpm dev` corriendo → Chrome → `chrome://inspect` → pestaña *Port forwarding* → *Add port forwarding*: puerto `5173` → origen `localhost:5173` (habilitado)
+2. Teléfono (con depuración USB activa, conectado al PC): abrir `http://localhost:5173` en Chrome
+3. Resultado: `localhost` es contexto seguro → SW + `beforeinstallprompt` activos → tocar el botón → diálogo nativo → instalada → el botón desaparece
+
+**Con `http://192.168.x.x:5173` (inseguro):** el botón se ve igual, pero al tocarlo abre el modal de instrucciones — Chrome no ofrecerá instalación nativa.
 
 ---
 
@@ -292,9 +371,24 @@ Usuario hace clic en chip "5mg"
 ```
 Usuario hace clic en "Agregar a mi lista" en Results.vue
   → cartStore.addToCart(product)
-    → Verifica duplicado por laboratorio
-    → Agrega al carrito
-    → saveCartToStorage() → localStorage
+    → ¿Ya existe un item con el mismo nombre_producto_farmacia?
+      → Sí: NO agrega → isDuplicateModalOpen = true
+            → App muestra el modal "Medicamento duplicado"
+              → "Entendido" → closeDuplicateModal()
+      → No: Agrega al carrito → saveCartToStorage() → localStorage
+```
+
+### 6. Instalación de la App
+```
+Usuario hace clic en "📥 Instalar App" (TheHeader)
+  → installApp() (usePwaInstall)
+    → hay deferredPrompt (entorno seguro)
+      → prompt() → diálogo nativo de Chrome
+        → accepted → appinstalled → botón se oculta
+        → dismissed → se limpia deferredPrompt; en móvil un nuevo clic
+                      abre el modal de instrucciones
+    → sin deferredPrompt (iOS o Android)
+      → BaseModal con instrucciones manuales
 ```
 
 ---
@@ -350,12 +444,14 @@ pnpm dev
 # Build de producción
 pnpm build
 
-# Type check
-npx tsc --noEmit
+# Vista previa del build
+pnpm preview
 
-# Lint
-pnpm lint
+# Type check (incluye archivos .vue)
+pnpm exec vue-tsc --noEmit
 ```
+
+> No hay script de lint: ESLint/Prettier no están instalados en el proyecto.
 
 ---
 
@@ -364,4 +460,4 @@ pnpm lint
 - **Filtrado de dosis**: Utiliza match exacto (`===`) en lugar de `.includes()` para evitar coincidencias parciales entre dosis simples y combinaciones
 - **Desacoplamiento de búsqueda y dosis**: Cuando el usuario busca por nombre de medicamento, el filtro de dosis se ignora automáticamente (`doseStr.length > 0` como condición de bypass)
 - **Dosis de combinación**: Se excluyen de `availableDosis` para evitar que arrays de medicamentos aparezcan en el filtro
-- **Deduplicación en carrito**: Se verifica por `laboratorio`, no por `id`, para evitar agregar el mismo laboratorio dos veces
+- **Deduplicación en carrito**: Se verifica por `nombre_producto_farmacia` (no por `id` ni por `laboratorio`), para evitar que el mismo medicamento aparezca dos veces en la lista. Si se detecta el duplicado no se agrega y se muestra el modal "Medicamento duplicado"

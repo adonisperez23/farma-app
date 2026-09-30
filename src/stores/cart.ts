@@ -7,6 +7,8 @@ const CART_STORAGE_KEY = "mediAhorro_cart";
 export const useCartStore = defineStore("cart", () => {
     const cartItems = ref<MedicamentoPrecioApi[]>([]);
     const isCartModalOpen = ref(false);
+    const isDuplicateModalOpen = ref(false);
+    const duplicateItemName = ref("");
 
     const cartCount = computed(() => cartItems.value.length);
 
@@ -35,16 +37,21 @@ export const useCartStore = defineStore("cart", () => {
 
     function addToCart(product: MedicamentoPrecioApi) {
         const exists = cartItems.value.find(
-            (item) => item.laboratorio === product.laboratorio,
+            (item) =>
+                item.nombre_producto_farmacia ===
+                product.nombre_producto_farmacia,
         );
-        if (!exists) {
-            cartItems.value.push({
-                ...product,
-                farmacia: product.farmacia,
-                precio_bs: product.precio_bs,
-            });
-            saveCartToStorage();
+        if (exists) {
+            duplicateItemName.value = product.nombre_producto_farmacia;
+            isDuplicateModalOpen.value = true;
+            return;
         }
+        cartItems.value.push({
+            ...product,
+            farmacia: product.farmacia,
+            precio_bs: product.precio_bs,
+        });
+        saveCartToStorage();
     }
 
     function removeFromCart(productId: number) {
@@ -62,6 +69,10 @@ export const useCartStore = defineStore("cart", () => {
         isCartModalOpen.value = false;
     }
 
+    function closeDuplicateModal() {
+        isDuplicateModalOpen.value = false;
+    }
+
     const totalCart = computed(() => {
         return cartItems.value.reduce(
             (acum, item) => (acum += item.precio_bs),
@@ -76,13 +87,15 @@ export const useCartStore = defineStore("cart", () => {
     return {
         cartItems,
         isCartModalOpen,
+        isDuplicateModalOpen,
+        duplicateItemName,
         cartCount,
         addToCart,
         removeFromCart,
         toggleCartModal,
         closeCartModal,
+        closeDuplicateModal,
         syncCartWithProducts,
         totalCart,
-      
     };
 });

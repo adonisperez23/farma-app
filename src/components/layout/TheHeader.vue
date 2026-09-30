@@ -1,9 +1,15 @@
 <script setup lang="ts">
+import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { useCartStore, useFiltersStore } from "@/stores";
+import BaseModal from "@/components/shared/BaseModal.vue";
+import { usePwaInstall } from "@/composables/usePwaInstall";
+
 const cartStore = useCartStore();
 const filterStore = useFiltersStore();
 const router = useRouter();
+const { showInstallButton, installApp, isIOS, isAndroid } = usePwaInstall();
+const isInstallModalOpen = ref(false);
 
 function onToggleCartModal() {
     filterStore.isMedicamentosModalOpen = false;
@@ -11,46 +17,12 @@ function onToggleCartModal() {
     cartStore.toggleCartModal();
 }
 
-// let deferredPrompt:any
-// ;
-// const installBtn:HTMLElement = document.getElementById("btnInstall")!;
-
-// // 1. Escuchar cuando el navegador detecta que la PWA es instalable
-// window.addEventListener("beforeinstallprompt", (e) => {
-//     // Prevenir que Android/Chrome muestre su barra inferior automática por defecto
-//     e.preventDefault();
-//     // Guardar el evento para dispararlo más tarde
-//     deferredPrompt = e;
-//     // Mostrar tu botón personalizado en la interfaz
-//     installBtn.style.display = "block";
-// });
-
-// // 2. Manejar el clic en tu botón personalizado
-// installBtn.addEventListener("click", async () => {
-//     if (!deferredPrompt) return;
-
-//     // Mostrar la ventana emergente nativa de instalación
-//     deferredPrompt.prompt();
-
-//     // Esperar la respuesta del usuario
-//     const { outcome } = await deferredPrompt.userChoice;
-
-//     if (outcome === "accepted") {
-//         console.log("El usuario aceptó instalar la app");
-//     } else {
-//         console.log("El usuario rechazó la instalación");
-//     }
-
-//     // Limpiar la variable y ocultar el botón
-//     deferredPrompt = null;
-//     installBtn.style.display = "none";
-// });
-
-// // 3. Escuchar si la app ya fue instalada exitosamente
-// window.addEventListener("appinstalled", () => {
-//     console.log("PWA instalada con éxito");
-//     installBtn.style.display = "none";
-// });
+async function onInstallClick() {
+    const result = await installApp();
+    if (result === "instructions") {
+        isInstallModalOpen.value = true;
+    }
+}
 </script>
 
 <template>
@@ -65,14 +37,14 @@ function onToggleCartModal() {
                     />
                 </a>
             </div>
-            <div>
-                <!-- <button
-                    id="btnInstall"
+            <div class="install-wrap">
+                <button
+                    v-if="showInstallButton()"
                     class="btn-install"
-                    style="display: none"
+                    @click="onInstallClick"
                 >
                     <span>📥 Instalar App</span>
-                </button> -->
+                </button>
             </div>
             <div class="header-actions">
                 <button
@@ -88,6 +60,56 @@ function onToggleCartModal() {
             </div>
         </div>
     </header>
+
+    <BaseModal
+        :modelValue="isInstallModalOpen"
+        :title="
+            isIOS
+                ? 'Instalar en tu iPhone'
+                : isAndroid
+                  ? 'Instalar en tu Android'
+                  : 'Instalar la app'
+        "
+        subtitle="Sigue estos pasos"
+        @close="isInstallModalOpen = false"
+    >
+        <template v-if="isIOS">
+            <ol class="install-steps">
+                <li>
+                    Toca el botón <strong>Compartir</strong> (cuadrado con
+                    flecha <strong>↑</strong>) en la barra de Safari.
+                </li>
+                <li>
+                    Selecciona <strong>"Añadir a pantalla de inicio"</strong>.
+                </li>
+                <li>
+                    Toca <strong>"Añadir"</strong> en la esquina superior
+                    derecha.
+                </li>
+            </ol>
+            <p class="install-note">
+                ¿Usas Chrome en iOS? Toca el menú <strong>⋮</strong> y elige
+                "Añadir a pantalla de inicio".
+            </p>
+        </template>
+        <template v-else>
+            <ol class="install-steps">
+                <li>
+                    Toca el menú <strong>⋮</strong> (esquina superior derecha
+                    de Chrome).
+                </li>
+                <li>
+                    Selecciona <strong>"Instalar aplicación"</strong> o
+                    <strong>"Añadir a pantalla de inicio"</strong>.
+                </li>
+                <li>Toca <strong>"Instalar"</strong> para confirmar.</li>
+            </ol>
+            <p class="install-note">
+                Si la opción no aparece, abre la web desde un dominio con
+                <strong>HTTPS</strong>.
+            </p>
+        </template>
+    </BaseModal>
 </template>
 
 <style scoped>
@@ -144,6 +166,29 @@ function onToggleCartModal() {
     background-color: var(--color-primary);
     color: var(--color-bg-surface);
     border-color: var(--color-primary);
+}
+
+.install-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding-left: 20px;
+    color: var(--color-text-main);
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+.install-steps li::marker {
+    font-weight: 700;
+    color: var(--color-primary);
+}
+
+.install-note {
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+    background-color: var(--color-bg-app);
+    border-radius: 8px;
+    padding: 10px 12px;
 }
 
 .icon-small {
@@ -218,5 +263,23 @@ function onToggleCartModal() {
     background-color: var(--color-primary-light);
     border-color: var(--color-primary);
     color: var(--color-primary);
+}
+
+@media (max-width: 640px) {
+    .header-top {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .install-wrap {
+        order: 3;
+        width: 100%;
+    }
+
+    .btn-install {
+        width: 100%;
+        justify-content: center;
+        padding: 10px 14px;
+    }
 }
 </style>

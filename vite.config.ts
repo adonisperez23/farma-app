@@ -27,7 +27,12 @@ export default defineConfig({
                     {
                         src: "/logo_pharmat.svg",
                         sizes: "192x192",
-                        type: "image/svg",
+                        type: "image/svg+xml",
+                    },
+                    {
+                        src: "/logo_pharmat.svg",
+                        sizes: "512x512",
+                        type: "image/svg+xml",
                     },
                 ],
             },
