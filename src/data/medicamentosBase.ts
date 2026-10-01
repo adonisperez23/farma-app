@@ -1356,7 +1356,7 @@ export const medicamentosBase: MedicamentoBase[] = [
     {
         id: "MED-GIN-004",
         patologia: "Salud Femenina / Anticoncepción",
-        principioActivo: "Diane 35",
+        principioActivo: "Ciproterona + Etinilestradiol",
         dosis: ["2mg/0.035mg"],
         alias: ["Diane 35", "Dixi 35", "Mileva 35"],
         presentacionReferencia: 21,
@@ -1364,7 +1364,7 @@ export const medicamentosBase: MedicamentoBase[] = [
     {
         id: "MED-GIN-005",
         patologia: "Salud Femenina / Anticoncepción",
-        principioActivo: "Yasmin",
+        principioActivo: "Drospirenona + Etinilestradiol",
         dosis: ["3mg/0.03mg", "3mg/0.02mg"],
         alias: ["Yaz", "Yasmin", "Bellaface", "Tinelle"],
         presentacionReferencia: 28,

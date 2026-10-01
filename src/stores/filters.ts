@@ -202,9 +202,22 @@ export const useFiltersStore = defineStore("filters", () => {
     }
 
     let searchTimeout: ReturnType<typeof setTimeout> | null = null;
+    let pendingSearch: Promise<void> = Promise.resolve();
+    let resolvePendingSearch: (() => void) | null = null;
+
     watch(searchQuery, (newQuery) => {
         if (!isDataLoaded.value) return;
-        if (searchTimeout) clearTimeout(searchTimeout);
+        if (searchTimeout) {
+            clearTimeout(searchTimeout);
+            searchTimeout = null;
+            resolvePendingSearch?.();
+            resolvePendingSearch = null;
+        }
+        let resolveSearch: () => void = () => {};
+        pendingSearch = new Promise<void>((resolve) => {
+            resolveSearch = resolve;
+        });
+        resolvePendingSearch = resolveSearch;
         searchTimeout = setTimeout(async () => {
             isLoading.value = true;
             try {
@@ -216,9 +229,15 @@ export const useFiltersStore = defineStore("filters", () => {
                         : "Error al cargar medicamentos";
             } finally {
                 isLoading.value = false;
+                resolvePendingSearch = null;
+                resolveSearch();
             }
         }, 300);
     });
+
+    function waitForSearch(): Promise<void> {
+        return pendingSearch;
+    }
 
     watch(availableDosis, (dosises) => {
         if (dosises.length === 1 && selectedDosis.value.length === 0) {
@@ -270,6 +289,7 @@ export const useFiltersStore = defineStore("filters", () => {
         medicamentosSinResultados,
         loadMedicamentos,
         updateSearchQuery,
+        waitForSearch,
         togglePharmacy,
         toggleDosis,
         setCondition,

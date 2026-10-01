@@ -19,7 +19,7 @@ const is_filter_displayed = ref(true)
 </script>
 
 <template>
-    <section class="filters-section">
+    <section id="filters-section" class="filters-section">
         <div v-if="is_filter_displayed" class="pharmacy-filter-container" >
             <span class="filter-label">Farmacias:</span>
             <div class="pharmacy-checkboxes">

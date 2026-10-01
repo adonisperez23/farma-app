@@ -5,7 +5,11 @@ const cartStore = useCartStore();
 </script>
 
 <template>
-    <main v-if="store.searchQuery.length > 0" class="results-container">
+    <main
+        v-if="store.searchQuery.length > 0"
+        id="results-section"
+        class="results-container"
+    >
         <div class="results-header">
             <h2 class="results-title">
                 Resultados para "<span class="search-term">{{
@@ -72,8 +76,6 @@ const cartStore = useCartStore();
         resultados...
     </h1>
 </template>
-
-<script setup lang="ts"></script>
 
 <style scoped>
 .results-container {
@@ -157,16 +159,22 @@ const cartStore = useCartStore();
     display: flex;
     flex-direction: column;
     gap: 2px;
+    flex: 1;
+    min-width: 0;
 }
 .product-title {
     font-size: 1rem;
     font-weight: 700;
     color: var(--color-text-main);
     margin: 0;
+    overflow-wrap: anywhere;
+    word-break: break-word;
 }
 .product-subtitle {
     font-size: 0.8rem;
     color: var(--color-text-muted);
+    overflow-wrap: anywhere;
+    word-break: break-word;
 }
 .pharmacy-badge {
     display: flex;
@@ -185,6 +193,7 @@ const cartStore = useCartStore();
     flex-direction: column;
     align-items: flex-end;
     gap: 2px;
+    flex-shrink: 0;
 }
 .price-amount {
     display: flex;
@@ -248,5 +257,14 @@ const cartStore = useCartStore();
 }
 .btn-add-cart:active {
     transform: scale(0.98);
+}
+@media (max-width: 480px) {
+    .card-content {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .product-pricing {
+        align-items: flex-start;
+    }
 }
 </style>

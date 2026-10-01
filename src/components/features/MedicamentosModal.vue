@@ -1,12 +1,32 @@
 <script setup lang="ts">
+import { nextTick } from "vue";
 import { useFiltersStore } from "@/stores";
 import BaseModal from "@/components/shared/BaseModal.vue";
 const store = useFiltersStore();
 
-function selectMedicamento(med: { principioActivo: string }) {
+function scrollToSearchArea() {
+    const el =
+        document.getElementById("results-section") ??
+        document.getElementById("filters-section");
+    if (!el) return;
+
+    const header = document.querySelector<HTMLElement>(".pwa-header");
+    el.style.scrollMarginTop = `${(header?.offsetHeight ?? 0) + 8}px`;
+    el.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+async function selectTerm(term: string) {
     store.clearFilters();
-    store.updateSearchQuery(med.principioActivo);
+    store.updateSearchQuery(term);
     store.closeMedicamentosModal();
+    await store.waitForSearch();
+    await nextTick();
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+    scrollToSearchArea();
+}
+
+function selectMedicamento(med: { principioActivo: string }) {
+    selectTerm(med.principioActivo);
 }
 </script>
 
@@ -39,20 +59,21 @@ function selectMedicamento(med: { principioActivo: string }) {
                         v-if="med.alias && med.alias.length > 0"
                         class="medicamento-aliases"
                     >
-                        <span
+                        <button
                             v-for="(alias, i) in med.alias"
                             :key="i"
+                            type="button"
                             class="alias-tag"
-                            >{{ alias }}</span
+                            @click.stop="selectTerm(alias)"
                         >
+                            {{ alias }}
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
     </BaseModal>
 </template>
-
-<script setup lang="ts"></script>
 
 <style scoped>
 .empty-state {
@@ -117,8 +138,22 @@ function selectMedicamento(med: { principioActivo: string }) {
     background-color: var(--color-primary-light);
     color: var(--color-primary);
     padding: 2px 8px;
+    border: 1px solid transparent;
     border-radius: 10px;
     font-weight: 500;
+    font-family: inherit;
+    cursor: pointer;
+    transition:
+        background-color 0.2s ease,
+        color 0.2s ease;
+}
+.alias-tag:hover {
+    background-color: var(--color-primary);
+    color: #ffffff;
+}
+.alias-tag:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
 }
 .medicamento-meta {
     display: flex;

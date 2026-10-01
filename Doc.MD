@@ -247,6 +247,8 @@ Modal que muestra medicamentos base por patología:
 - Se abre desde `Filters.vue` al seleccionar una condición
 - Muestra `store.medicamentosPorPatologia`
 - Al hacer clic en un medicamento, `selectMedicamento(med)` coloca solo el `principioActivo` en el buscador, resetea filtros con `store.clearFilters()`, y cierra el modal
+- Los **alias** (marcas comerciales) se renderizan como `<button class="alias-tag">`; al hacer clic, `@click.stop="selectTerm(alias)"` busca el alias en el buscador (mismo flujo: `clearFilters()` → `updateSearchQuery(alias)` → cerrar modal). El `.stop` evita que el clic burbulee a la tarjeta y dispare la búsqueda por principio activo
+- Tras iniciar la búsqueda, `scrollToSearchArea()` ubica la pantalla en la sección correspondiente: en **móvil (≤640px)** hace scroll hasta `#filters-section` (la sección de filtros ocupa mucha pantalla) y en **escritorio** hasta `#results-section`. El offset se calcula dinámico con `el.style.scrollMarginTop = header.offsetHeight + 8px` (header fijo `.pwa-header`) y se usa `scrollIntoView({ behavior: "smooth" })`. Aplica tanto al nombre del medicamento como a los alias
 
 ### `TheHeader.vue` (`src/components/layout/TheHeader.vue`)
 
@@ -343,10 +345,11 @@ Usuario hace clic en "Hipertensión" (chip)
     → store.openMedicamentosModal('Hipertensión')
       → MedicamentosModal muestra medicamentos base de Hipertensión
         → Usuario hace clic en un medicamento
-          → selectMedicamento(med)
+          → selectMedicamento(med) / selectTerm(alias)
             → store.clearFilters()  (resetea dosis, cantidad, farmacias)
-            → store.updateSearchQuery(med.principioActivo)
+            → store.updateSearchQuery(med.principioActivo o alias)
             → store.closeMedicamentosModal()
+            → scrollToSearchArea()  (móvil: #filters-section · escritorio: #results-section)
               → Results muestra productos del principio activo
 ```
 
