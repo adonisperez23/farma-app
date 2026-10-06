@@ -47,10 +47,10 @@ const cartStore = useCartStore();
                 </div>
                 <div class="product-pricing">
                     <div class="price-amount">
-                        <div>Bs</div>
                         <div>
                             {{ product.precio_bs.toFixed(2) }}
                         </div>
+                        <div>Bs</div>
                     </div>
                     <div v-if="store.refRate" class="price-usd">
                         <div>REF</div>

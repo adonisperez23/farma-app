@@ -3,22 +3,59 @@ import { IonContent, IonPage } from "@ionic/vue";
 import Filters from "@/components/features/Filters.vue";
 import Results from "@/components/features/Results.vue";
 import MedicamentosModal from "@/components/features/MedicamentosModal.vue";
+import OnboardingModal from "@/components/features/OnboardingModal.vue";
 import { useFiltersStore } from "@/stores";
 import { useCartStore } from "@/stores";
-import { onMounted } from "vue";
+import { useOnboarding } from "@/composables/useOnboarding";
+import { onMounted, onBeforeUnmount, ref } from "vue";
 const store = useFiltersStore();
 const cartStore = useCartStore();
+const onboarding = useOnboarding();
+const headerOffset = ref(125);
+let headerObserver: ResizeObserver | null = null;
+
+function updateHeaderOffset() {
+    const header = document.querySelector<HTMLElement>(".pwa-header");
+    if (header) {
+        headerOffset.value = header.offsetHeight + 12;
+    }
+}
+
+function watchHeaderOffset() {
+    const header = document.querySelector<HTMLElement>(".pwa-header");
+    updateHeaderOffset();
+    if (header && "ResizeObserver" in window) {
+        headerObserver = new ResizeObserver(() => updateHeaderOffset());
+        headerObserver.observe(header);
+    }
+    window.addEventListener("resize", updateHeaderOffset);
+    window.addEventListener("orientationchange", updateHeaderOffset);
+}
 
 onMounted(async () => {
+    watchHeaderOffset();
     await store.loadMedicamentos();
     cartStore.syncCartWithProducts(store.products);
+    if (!onboarding.hasSeenOnboarding()) {
+        setTimeout(() => onboarding.open(), 400);
+    }
+});
+
+onBeforeUnmount(() => {
+    headerObserver?.disconnect();
+    headerObserver = null;
+    window.removeEventListener("resize", updateHeaderOffset);
+    window.removeEventListener("orientationchange", updateHeaderOffset);
 });
 </script>
 
 <template>
     <IonPage>
         <IonContent class="page-content">
-            <div class="content-spacer">
+            <div
+                class="content-spacer"
+                :style="{ '--header-h': `${headerOffset}px` }"
+            >
                 <div class="search-container">
                     <span class="material-symbols-outlined search-icon"></span>
                     <input
@@ -105,13 +142,13 @@ onMounted(async () => {
                     <div class="total-text">
                         <div class="total-ref">
                             <h1>
-                                Total para compra: Bs {{ cartStore.totalCart }} 
+                                Total para compra: Bs {{ cartStore.totalCart }}
                             </h1>
-                            <h6>
+                            <h6 v-if="store.refRate">
                                 Ref
                                 {{
                                     (
-                                        cartStore.totalCart / store.refRate!
+                                        cartStore.totalCart / store.refRate
                                     ).toFixed(2)
                                 }}
                             </h6>
@@ -128,6 +165,7 @@ onMounted(async () => {
             </div>
         </div>
         <MedicamentosModal />
+        <OnboardingModal />
     </IonPage>
 </template>
 
@@ -142,7 +180,10 @@ onMounted(async () => {
 }
 
 .content-spacer {
-    padding-top: 125px;
+    /* --header-h se define en vivo desde updateHeaderOffset() según la
+       altura real de .pwa-header (evita que el header fijo tape el buscador
+       en móviles, donde el logo y la fila de instalación lo alargan) */
+    padding-top: var(--header-h, 125px);
     padding-bottom: 100px;
 }
 

@@ -1,15 +1,16 @@
 <script setup lang="ts">
-import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { useCartStore, useFiltersStore } from "@/stores";
 import BaseModal from "@/components/shared/BaseModal.vue";
 import { usePwaInstall } from "@/composables/usePwaInstall";
+import { useOnboarding } from "@/composables/useOnboarding";
 
 const cartStore = useCartStore();
 const filterStore = useFiltersStore();
 const router = useRouter();
-const { showInstallButton, installApp, isIOS, isAndroid } = usePwaInstall();
-const isInstallModalOpen = ref(false);
+const { showInstallButton, installApp, isIOS, isAndroid, isInstallModalOpen } =
+    usePwaInstall();
+const onboarding = useOnboarding();
 
 function onToggleCartModal() {
     filterStore.isMedicamentosModalOpen = false;
@@ -22,6 +23,13 @@ async function onInstallClick() {
     if (result === "instructions") {
         isInstallModalOpen.value = true;
     }
+}
+
+function onHelpClick() {
+    filterStore.isMedicamentosModalOpen = false;
+    filterStore.selectedPathologyForModal = null;
+    cartStore.closeCartModal();
+    onboarding.open();
 }
 </script>
 
@@ -47,6 +55,14 @@ async function onInstallClick() {
                 </button>
             </div>
             <div class="header-actions">
+                <button
+                    class="btn-help"
+                    @click="onHelpClick"
+                    aria-label="Cómo usar"
+                    title="Cómo usar"
+                >
+                    <span aria-hidden="true">?</span>
+                </button>
                 <button
                     class="btn-cart"
                     @click="onToggleCartModal"
@@ -195,6 +211,29 @@ async function onInstallClick() {
     font-size: 18px;
 }
 
+.btn-help {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: var(--color-primary-light);
+    color: var(--color-primary);
+    border: 1px solid var(--color-primary-border);
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    line-height: 1;
+}
+
+.btn-help:hover {
+    background-color: var(--color-primary);
+    color: var(--color-bg-surface);
+    border-color: var(--color-primary);
+}
+
 .btn-cart {
     display: inline-flex;
     align-items: center;
@@ -266,6 +305,10 @@ async function onInstallClick() {
 }
 
 @media (max-width: 640px) {
+    .brand-logo {
+        height: 56px;
+    }
+
     .header-top {
         flex-wrap: wrap;
         gap: 8px;

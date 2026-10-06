@@ -30,7 +30,8 @@ src/
 │   ├── features/       # Componentes de funcionalidad principal
 │   │   ├── Filters.vue
 │   │   ├── Results.vue
-│   │   └── MedicamentosModal.vue
+│   │   ├── MedicamentosModal.vue
+│   │   └── OnboardingModal.vue
 │   ├── layout/         # Layout de la aplicación
 │   │   ├── TheHeader.vue
 │   │   └── TheFooter.vue
@@ -54,7 +55,8 @@ src/
 │   ├── PrivacyPage.vue
 │   └── LegalNoticePage.vue
 ├── composables/        # Composables reutilizables
-│   └── usePwaInstall.ts
+│   ├── usePwaInstall.ts
+│   └── useOnboarding.ts
 ├── styles/             # Estilos globales
 ├── theme/              # Temas y variables CSS
 ├── router/             # Configuración de enrutamiento
@@ -262,9 +264,65 @@ Header fijo de la aplicación (no contiene campo de búsqueda; el buscador vive 
 
 Footer con enlaces legales (términos, privacidad, aviso legal) y navegación a `/home`.
 
+**Visibilidad:** el footer se renderiza solo cuando **ningún modal está activo**. En `App.vue`, el `v-if` evalúa un computado `isAnyModalOpen` que hace OR de:
+
+| Modal | Estado |
+|---|---|
+| Carrito ("Ver mi lista") | `cartStore.isCartModalOpen` |
+| Medicamento duplicado | `cartStore.isDuplicateModalOpen` |
+| Medicamentos por patología | `filterStore.isMedicamentosModalOpen` |
+| Tutorial / onboarding | `useOnboarding().isOpen` |
+| Instalar app | `usePwaInstall().isInstallModalOpen` |
+
+El estado del modal de instalación vive en el composable `usePwaInstall` (ref de módulo `isInstallModalOpen`) para que `TheHeader.vue` (que lo abre) y `App.vue` (que oculta el footer) compartan el mismo estado.
+
+> **Cuidado con los refs de `useOnboarding`:** `isOpen` y `step` son `Ref` de nivel de módulo. Fuera de un template hay que usar `.value` (ej. `onboarding.isOpen.value` en el computado de `App.vue`). Escribir `onboarding.isOpen` sin `.value` en `<script>` devuelve el objeto Ref (siempre truthy) y el footer nunca se renderizaría.
+
 ### `BaseModal.vue` (`src/components/shared/BaseModal.vue`)
 
 Modal reutilizable con slots (`header`/default), props `modelValue`, `title`, `subtitle` y evento `close`. **Nota**: sólo emite `close`, no `update:modelValue` — usar `:modelValue` + `@close` en vez de `v-model`.
+
+### `OnboardingModal.vue` (`src/components/features/OnboardingModal.vue`)
+
+Modal de bienvenida multipaso que enseña el flujo completo de consulta de medicamentos. Reutiliza `BaseModal` (slot `header`/default; la navegación vive en el slot default porque `BaseModal` no tiene slot `footer`).
+
+**Pasos (6):**
+
+| # | Icono | Título | Contenido |
+|---|---|---|---|
+| 1 | 💊 | Compara precios de tu medicamento | Farmacias (Farmatodo, Farmadón, Farmapaz, Farmatina) y precios en Bs |
+| 2 | 🔍 | Busca tu medicamento | Placeholder `Buscar medicamento (ej. Losartán 50mg)...`, búsqueda automática sin Enter, dosis en la query, botón ✕ |
+| 3 | 🎛️ | Afina con filtros | Farmacias, Condición rápida (chips de patología), Dosis, Cantidad, botón Ocultar/Mostrar filtros |
+| 4 | 🏷️ | Entiende los resultados | Etiqueta "Mejor Precio" en la primera tarjeta, laboratorio • presentación, Bs y REF, "Disponible", "Agregar a mi lista" |
+| 5 | 🛒 | Arma tu lista de compra | "Ver mi lista", "Total para compra", "Ir a Farmacia", deduplicación |
+| 6 | 📲 | Úsala como app | Botón "📥 Instalar App", pasos iOS/Android, persistencia en el dispositivo |
+
+**Navegación:** "Saltar" (izquierda), puntos de progreso, "Atrás" (desde el paso 2) y "Siguiente" → "Empezar" en el último paso. Cerrar con ✕ o tocando el fondo equivale a Saltar (ambas opciones marcan el onboarding como visto).
+
+**Íconos:** se usan **emoji** (no Material Symbols) porque la fuente de íconos no está cargada en el proyecto.
+
+---
+
+## Composable: `useOnboarding` (`src/composables/useOnboarding.ts`)
+
+Singleton con estado a nivel de módulo (patrón `usePwaInstall`):
+
+| Elemento | Descripción |
+|---|---|
+| `isOpen` | Estado de visibilidad del modal |
+| `step` | Paso actual (0-based) |
+| `steps` | Array de 6 `OnboardingStep` (`icon`, `title`, `text`, `bullets?`) |
+| `hasSeenOnboarding()` | `true` si `localStorage['mediAhorro_onboarding_v1'] === "done"` (o si no hay `window`) |
+| `open()` | Reinicia `step` a 0 y abre el modal |
+| `close()` | Cierra el modal y marca el onboarding como visto |
+| `next()` | Avanza un paso; en el último paso llama a `close()` |
+| `prev()` | Retrocede un paso (no baja de 0) |
+
+**Disparador:** en `HomePage.vue`, dentro de `onMounted`, después de `await store.loadMedicamentos()` y `cartStore.syncCartWithProducts(...)`, si `!onboarding.hasSeenOnboarding()` se abre el modal tras un `setTimeout` de 400 ms (deja asentarse el layout).
+
+**Reapertura:** el header (`TheHeader.vue`) incluye un botón **"?"** (`aria-label="Cómo usar"`) que cierra el carrito y el modal de patología (si están abiertos) y llama a `onboarding.open()`. Permite volver a ver el tutorial en cualquier momento aunque ya se haya completado.
+
+**Persistencia:** clave `mediAhorro_onboarding_v1` en `localStorage`, valor `"done"`. Se marca en cualquier salida del modal (Empezar, Saltar o ✕).
 
 ---
 
@@ -299,6 +357,7 @@ Singleton con listeners registrados a nivel de módulo (se registran al importar
 | `isInstalled` | `navigator.standalone` (iOS) o `display-mode: standalone` (Chromium) |
 | `showInstallButton()` | `false` si está instalada; `true` siempre en iOS/Android; en escritorio sólo si `canInstall` |
 | `installApp()` | Con `deferredPrompt` → `prompt()` nativo (`"native"`); sin él en móvil → `"instructions"`; sin él en escritorio → `"none"` |
+| `isInstallModalOpen` | Ref de módulo que controla la visibilidad del modal de instrucciones de instalación (`"instructions"`). Compartido entre `TheHeader.vue` y `App.vue` (usa el footer). |
 
 ### UI en `TheHeader.vue`
 
@@ -394,6 +453,16 @@ Usuario hace clic en "📥 Instalar App" (TheHeader)
       → BaseModal con instrucciones manuales
 ```
 
+### 7. Onboarding de Bienvenida
+```
+onMounted (HomePage) → loadMedicamentos() + syncCartWithProducts()
+  → ¿hasSeenOnboarding()?  (localStorage 'mediAhorro_onboarding_v1')
+    → No: setTimeout(400ms) → onboarding.open() → OnboardingModal (6 pasos)
+         → Saltar / ✕ / "Empezar" → close() → marca 'done' en localStorage
+    → Sí: no se muestra
+Reapertura: header botón "?" → cierra carrito/patología → onboarding.open()
+```
+
 ---
 
 ## Normalización de Dosis
@@ -464,3 +533,6 @@ pnpm exec vue-tsc --noEmit
 - **Desacoplamiento de búsqueda y dosis**: Cuando el usuario busca por nombre de medicamento, el filtro de dosis se ignora automáticamente (`doseStr.length > 0` como condición de bypass)
 - **Dosis de combinación**: Se excluyen de `availableDosis` para evitar que arrays de medicamentos aparezcan en el filtro
 - **Deduplicación en carrito**: Se verifica por `nombre_producto_farmacia` (no por `id` ni por `laboratorio`), para evitar que el mismo medicamento aparezca dos veces en la lista. Si se detecta el duplicado no se agrega y se muestra el modal "Medicamento duplicado"
+- **Offset dinámico del header (HomePage)**: el header `.pwa-header` es `position: fixed` y en móviles es más alto (logo + fila de instalación). En vez de un `padding-top` fijo, `HomePage.vue` mide `header.offsetHeight + 12` y lo aplica a `.content-spacer` mediante la CSS var `--header-h` (fallback `125px`). La medición se actualiza con `ResizeObserver` sobre el header y con `resize`/`orientationchange` de la ventana — cubre también el caso en que el botón "📥 Instalar App" aparece/desaparece tras montar. Patrón análogo al `scrollMarginTop` de `MedicamentosModal.vue`
+- **Logo compacto en móvil**: en `TheHeader.vue`, `@media (max-width: 640px)` reduce `.brand-logo` de `100px` a `56px` de alto para que el header no ocupe media pantalla en teléfonos y no desborde las acciones (logo + "?" + "Ver mi lista")
+- **Tasa REF (`refRate`)**: el backend (farma-scrapper) solo persiste `tasa_bcv_usd` en filas con `moneda === "REF"` (~20% de los productos); el resto queda en `null`. En el store, `refRate` hace fallback a `knownRefRate` (última tasa vista en cualquier carga/búsqueda, actualizada por un `watch` sobre `products`), de modo que el precio REF siga visible en tarjetas y carrito aunque el resultado actual no traiga filas REF. El `Ref` del total del carrito tiene `v-if="store.refRate"` para no mostrar Infinity/NaN cuando no hay tasa conocida

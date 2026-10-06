@@ -52,11 +52,24 @@ export const useFiltersStore = defineStore("filters", () => {
     const selectedDosis = ref<string[]>([]);
     const selectedCantidad = ref<string>("todos");
 
+    // Última tasa BCV conocida (de cualquier carga/búsqueda que haya traído
+    // filas con tasa_bcv_usd). El backend solo persiste la tasa en productos
+    // con moneda "REF"; sin este fallback, búsquedas sin filas REF dejarían
+    // refRate en null y el precio REF desaparecería de tarjetas y carrito.
+    const knownRefRate = ref<number | null>(null);
+
     const refRate = computed(() => {
         return (
-            products.value.find((p) => p.tasa_bcv_usd !== null)?.tasa_bcv_usd ??
-            null
+            products.value.find((p) => p.tasa_bcv_usd != null)?.tasa_bcv_usd ??
+            knownRefRate.value
         );
+    });
+
+    watch(products, (list) => {
+        const tasa = list.find((p) => p.tasa_bcv_usd != null)?.tasa_bcv_usd;
+        if (tasa != null) {
+            knownRefRate.value = tasa;
+        }
     });
 
     function getPrecioUsd(product: MedicamentoPrecioApi): number | null {
@@ -298,6 +311,7 @@ export const useFiltersStore = defineStore("filters", () => {
         openMedicamentosModal,
         closeMedicamentosModal,
         refRate,
+        knownRefRate,
         getPrecioUsd,
     };
 });

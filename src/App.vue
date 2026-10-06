@@ -1,26 +1,33 @@
 <script setup lang="ts">
+import { computed } from "vue";
 import { IonApp, IonRouterOutlet } from "@ionic/vue";
 import TheHeader from "@/components/layout/TheHeader.vue";
 import TheFooter from "@/components/layout/TheFooter.vue";
 import BaseModal from "@/components/shared/BaseModal.vue";
 import { useCartStore, useFiltersStore } from "./stores";
+import { useOnboarding } from "@/composables/useOnboarding";
+import { usePwaInstall } from "@/composables/usePwaInstall";
 
 const cartStore = useCartStore();
 const filterStore = useFiltersStore();
+const onboarding = useOnboarding();
+const { isInstallModalOpen } = usePwaInstall();
+
+const isAnyModalOpen = computed(
+    () =>
+        cartStore.isCartModalOpen ||
+        cartStore.isDuplicateModalOpen ||
+        filterStore.isMedicamentosModalOpen ||
+        onboarding.isOpen.value ||
+        isInstallModalOpen.value
+);
 </script>
 
 <template>
     <ion-app>
         <TheHeader />
         <ion-router-outlet />
-        <TheFooter
-            v-if="
-                (!cartStore.isCartModalOpen &&
-                    filterStore.selectedPathologyForModal === null) ||
-                (!filterStore.isMedicamentosModalOpen &&
-                    filterStore.selectedPathologyForModal !== null)
-            "
-        />
+        <TheFooter v-if="!isAnyModalOpen" />
         <BaseModal
             :modelValue="cartStore.isDuplicateModalOpen"
             title="Medicamento duplicado"

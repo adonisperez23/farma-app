@@ -10,6 +10,7 @@ const canInstall = ref(false);
 const isIOS = detectIOS();
 const isAndroid = detectAndroid();
 const isInstalled = ref(checkInstalled());
+const isInstallModalOpen = ref(false);
 
 function detectIOS(): boolean {
     if (typeof navigator === "undefined") return false;
@@ -98,5 +99,6 @@ export function usePwaInstall() {
         isIOS,
         isAndroid,
         isInstalled,
+        isInstallModalOpen,
     };
 }
