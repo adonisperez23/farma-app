@@ -78,7 +78,8 @@ const is_filter_displayed = ref(true)
             <span class="filter-label">Condición rápida:</span>
             <div class="pathology-carousel">
                 <button
-                    v-for="(patologia,name) in pathologyMap"
+                    v-for="(patologia, name) in pathologyMap"
+                    :key="name"
                     class="chip-button"
                     :class="{
                         active: store.selectedCondition === patologia,
@@ -171,7 +172,7 @@ const is_filter_displayed = ref(true)
             v-if="store.availableDosis.length > 0 && store.searchQuery.length > 0 && is_filter_displayed "
             class="dosis-filter-container"
         >
-            <span " class="filter-label"
+            <span class="filter-label"
                 >Dosis:</span
             >
             <div class="dosis-chips">
@@ -215,8 +216,6 @@ const is_filter_displayed = ref(true)
         </div>
     </section>
 </template>
-
-<script setup lang="ts"></script>
 
 <style scoped>
 .filters-section {

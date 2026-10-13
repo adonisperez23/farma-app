@@ -1,33 +1,37 @@
-<script setup lang="ts">
-import { useRouter } from "vue-router";
-const router = useRouter();
-</script>
+<script setup lang="ts"></script>
 
 <template>
     <footer class="pwa-footer">
         <div class="footer-content">
-            <div @click="router.push('/home')" class="footer-brand">
-                <a @click.prevent href="/inicio">
-                    <img
-                        src="/logo_pharmatch_with_name.svg"
-                        alt="MediAhorro"
-                        class="footer-logo"
-                    />
-                </a>
-            </div>
-            <nav class="footer-nav">
-                <button class="footer-link" @click="router.push('/terminos')">
-                    Términos y condiciones de uso
-                </button>
-                <button class="footer-link" @click="router.push('/privacidad')">
+            <router-link to="/home" class="footer-brand">
+                <img
+                    src="/logo_pharmatch_with_name.svg"
+                    alt="Pharmatch"
+                    class="footer-logo"
+                />
+            </router-link>
+            <nav class="footer-nav" aria-label="Enlaces legales y de información">
+                <router-link class="footer-link" to="/guias">
+                    Guías
+                </router-link>
+                <router-link class="footer-link" to="/faq">
+                    FAQ
+                </router-link>
+                <router-link class="footer-link" to="/sobre-nosotros">
+                    Sobre nosotros
+                </router-link>
+                <router-link class="footer-link" to="/contacto">
+                    Contacto
+                </router-link>
+                <router-link class="footer-link" to="/terminos">
+                    Términos y condiciones
+                </router-link>
+                <router-link class="footer-link" to="/privacidad">
                     Políticas de Privacidad
-                </button>
-                <button
-                    class="footer-link"
-                    @click="router.push('/aviso-legal')"
-                >
+                </router-link>
+                <router-link class="footer-link" to="/aviso-legal">
                     Aviso Legal
-                </button>
+                </router-link>
             </nav>
         </div>
         <div class="footer-bottom">
@@ -56,6 +60,7 @@ const router = useRouter();
     align-items: center;
     padding: 12px 16px;
     gap: 16px;
+    flex-wrap: wrap;
 }
 
 .footer-brand {
@@ -71,6 +76,7 @@ const router = useRouter();
 .footer-nav {
     display: flex;
     gap: 8px;
+    flex-wrap: wrap;
 }
 
 .footer-link {
@@ -83,12 +89,32 @@ const router = useRouter();
     font-size: 0.75rem;
     font-weight: 600;
     transition: all 0.2s ease-in-out;
+    text-decoration: none;
 }
 
 .footer-link:hover {
     background-color: var(--color-primary-light);
     border-color: var(--color-primary);
     color: var(--color-primary);
+}
+
+.footer-link.router-link-active {
+    background-color: var(--color-primary);
+    border-color: var(--color-primary);
+    color: #ffffff;
+    font-weight: 700;
+    box-shadow: 0 2px 8px rgba(0, 123, 245, 0.25);
+}
+
+.footer-link.router-link-active:hover {
+    background-color: var(--color-primary-hover);
+    border-color: var(--color-primary-hover);
+    color: #ffffff;
+}
+
+.footer-link:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
 }
 
 .footer-bottom {

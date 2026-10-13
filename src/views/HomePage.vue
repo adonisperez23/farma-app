@@ -187,6 +187,12 @@ onBeforeUnmount(() => {
     padding-bottom: 100px;
 }
 
+@media (max-width: 639px) {
+    .content-spacer {
+        padding-bottom: 200px;
+    }
+}
+
 .cart-modal-backdrop {
     position: fixed;
     top: 0;

@@ -63,15 +63,16 @@ import { IonContent, IonPage, IonHeader, IonToolbar, IonTitle, IonButtons, IonBa
                 <section class="legal-section">
                     <h2>4. PUBLICIDAD Y ANUNCIOS DE TERCEROS</h2>
                     <p>
-                        Para mantener la gratuidad de la Aplicación y cubrir los costos operativos de servidor e infraestructura, podemos exhibir espacios publicitarios no intrusivos o banners informativos:
+                        Para mantener la gratuidad de la Aplicación y cubrir los costos operativos de servidor e infraestructura, exhibimos anuncios servidos por <strong>Google AdSense</strong>.
                     </p>
-                    <p><strong>A. Redes Publicitarias de Terceros </strong></p>
+                    <p><strong>A. Google AdSense y cookies publicitarias </strong></p>
                     <p>
-                        Podemos utilizar proveedores de publicidad externos. Estas empresas pueden utilizar identificadores de dispositivos o cookies para publicar anuncios contextualmente relevantes o no personalizados.
+                        Google, como proveedor externo, utiliza cookies (incluida la cookie DART deDoubleClick) para publicar anuncios en función de las visitas anteriores del usuario a este u otros sitios web.
                     </p>
                     <ul>
-                        <li><strong>Anuncios No Personalizados:</strong> Por defecto, la publicidad servida prioriza criterios contextuales (relacionados con el contenido de la pantalla) y no el perfilado del usuario.</li>
-                        <li><strong>Control del Usuario:</strong> Puede inhabilitar el uso de identificadores publicitarios para publicidad personalizada ajustando la configuración de privacidad de su dispositivo móvil o navegador web.</li>
+                        <li><strong>Publicidad contextual:</strong> Los anuncios mostrados priorizan criterios contextuales relacionados con el contenido de la página y no con datos personales identificables, ya que la Aplicación no requiere cuentas ni registros.</li>
+                        <li><strong>Control del Usuario:</strong> Puede inhabilitar la publicidad personalizada de Google y de terceros ajustando su configuración en <a href="https://adssettings.google.com" target="_blank" rel="noopener noreferrer">Google Anuncios Settings</a>, o desactivando la cookie DART en <a href="https://policies.google.com/technologies/ads" target="_blank" rel="noopener noreferrer">Política de tecnologías publicitarias de Google</a>.</li>
+                        <li><strong>Cookies de terceros:</strong> El uso de cookies por parte de Google está sujeto a las políticas de privacidad de Google. Para más información, consulte <a href="https://policies.google.com/technologies/cookies" target="_blank" rel="noopener noreferrer">Cómo usa Google las cookies</a> y el portal <a href="https://www.aboutads.info/choices/" target="_blank" rel="noopener noreferrer">AboutAds Choices</a> para opt out de anunciantes participantes.</li>
                     </ul>
                     <p><strong>B. Patrocinios Directos y Módulos Destacados</strong></p>
                     <p>En caso de mostrar anuncios o productos destacados provenientes de acuerdos comerciales directos con laboratorios o establecimientos de salud, estos siempre estarán identificados explícitamente con la etiqueta "Patrocinado" o "Sugerencia", asegurando la transparencia e imparcialidad del comparador de precios principal.</p>
@@ -131,6 +132,12 @@ import { IonContent, IonPage, IonHeader, IonToolbar, IonTitle, IonButtons, IonBa
     padding-bottom: 100px;
 }
 
+@media (max-width: 639px) {
+    .content-spacer {
+        padding-bottom: 200px;
+    }
+}
+
 h1 {
     font-size: 1.5rem;
     color: var(--color-text-main);
@@ -177,5 +184,10 @@ h1 {
     color: var(--color-text-muted);
     line-height: 1.6;
     margin-bottom: 4px;
+}
+
+.legal-section a {
+    color: var(--color-primary);
+    font-weight: 600;
 }
 </style>

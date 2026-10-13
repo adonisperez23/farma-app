@@ -13,7 +13,7 @@
         <title>Pharmatch — Comparador de precios de medicamentos</title>
         <meta
             name="description"
-            content="Compara precios de medicamentos en farmacias de Maturin Edo Monagas. Busca por nombre o principio activo y ahorra en tu compra."
+            content="Compara precios de medicamentos en farmacias de Maturín, Monagas. Busca por nombre o principio activo, filtra por dosis y ahorra en tu compra."
         />
         <meta name="robots" content="index, follow" />
         <link rel="canonical" href="https://pharmatch.info/" />
@@ -26,7 +26,7 @@
         />
         <meta
             property="og:description"
-            content="Compara precios de medicamentos en farmacias de Maturin Edo Monagas. Busca por nombre o principio activo y ahorra en tu compra."
+            content="Compara precios de medicamentos en farmacias de Maturín, Monagas. Busca por nombre o principio activo, filtra por dosis y ahorra en tu compra."
         />
         <meta property="og:url" content="https://pharmatch.info/" />
         <meta
@@ -35,14 +35,111 @@
         />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
+        <style>
+            #app {
+                font-family:
+                    system-ui,
+                    -apple-system,
+                    "Segoe UI",
+                    Roboto,
+                    sans-serif;
+                max-width: 720px;
+                margin: 0 auto;
+                padding: 24px 16px;
+                color: #0f172a;
+                line-height: 1.6;
+            }
+            #app h1 {
+                font-size: 1.5rem;
+            }
+            #app h2 {
+                font-size: 1.15rem;
+                margin-top: 1.5rem;
+            }
+        </style>
         <script
             async
             src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8113640503834786"
             crossorigin="anonymous"
         ></script>
+        <script type="application/ld+json">
+            {
+                "@context": "https://schema.org",
+                "@type": "WebSite",
+                "name": "Pharmatch",
+                "url": "https://pharmatch.info/",
+                "inLanguage": "es_VE",
+                "description": "Comparador de precios de medicamentos en farmacias de Maturín, Monagas.",
+                "potentialAction": {
+                    "@type": "SearchAction",
+                    "target": "https://pharmatch.info/home?search={search_term_string}",
+                    "query-input": "required name=search_term_string"
+                }
+            }
+        </script>
+        <script type="application/ld+json">
+            {
+                "@context": "https://schema.org",
+                "@type": "Organization",
+                "name": "Pharmatch",
+                "url": "https://pharmatch.info/",
+                "logo": "https://pharmatch.info/logo_pharmatch_with_name.svg",
+                "contactPoint": {
+                    "@type": "ContactPoint",
+                    "contactType": "customer support",
+                    "email": "contacto@pharmatch.info",
+                    "availableLanguage": "Spanish"
+                }
+            }
+        </script>
     </head>
     <body>
-        <div id="app"></div>
+        <div id="app">
+            <header class="ssr-header">
+                <h1>Pharmatch — Comparador de precios de medicamentos</h1>
+            </header>
+            <main class="ssr-main">
+                <p>
+                    <strong>Pharmatch</strong> es un comparador de precios de
+                    medicamentos que te ayuda a ahorrar en cada compra. Busca
+                    cualquier medicamento por su nombre comercial o por su
+                    principio activo y compara en segundos los precios en
+                    farmacias como Farmatodo, Farmadón, Farmapaz y Farmatina en
+                    Maturín, estado Monagas, Venezuela.
+                </p>
+                <p>
+                    Filtra por dosis, cantidad de comprimidos y disponibilidad,
+                    arma tu lista de compra y consulta el total en bolívares y
+                    en dólares (referencia BCV) antes de salir a la farmacia.
+                    Los precios se actualizan a diario para que siempre veas la
+                    opción más conveniente.
+                </p>
+                <h2>Guías para comparar y comprar medicamentos</h2>
+                <p>
+                    En nuestra sección de guías encontrarás artículos originales
+                    sobre medicamentos genéricos, principios activos, cómo
+                    interpretar las dosis y consejos para comparar precios entre
+                    farmacias sin perder tiempo.
+                </p>
+                <h2>Información del sitio</h2>
+                <ul>
+                    <li><a href="/home">Buscador de medicamentos</a></li>
+                    <li><a href="/guias">Guías de medicamentos</a></li>
+                    <li><a href="/faq">Preguntas frecuentes</a></li>
+                    <li><a href="/sobre-nosotros">Sobre nosotros</a></li>
+                    <li><a href="/contacto">Contacto</a></li>
+                    <li><a href="/terminos">Términos y condiciones</a></li>
+                    <li><a href="/privacidad">Políticas de privacidad</a></li>
+                    <li><a href="/aviso-legal">Aviso legal</a></li>
+                </ul>
+            </main>
+            <noscript>
+                <p>
+                    Activa JavaScript para usar el buscador interactivo de
+                    precios de Pharmatch.
+                </p>
+            </noscript>
+        </div>
         <script type="module" src="/src/main.ts"></script>
     </body>
 </html>

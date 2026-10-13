@@ -100,6 +100,12 @@ import { IonContent, IonPage, IonHeader, IonToolbar, IonTitle, IonButtons, IonBa
     padding-bottom: 100px;
 }
 
+@media (max-width: 639px) {
+    .content-spacer {
+        padding-bottom: 200px;
+    }
+}
+
 h1 {
     font-size: 1.5rem;
     color: var(--color-text-main);

@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { useRouter } from "vue-router";
 import { useCartStore, useFiltersStore } from "@/stores";
 import BaseModal from "@/components/shared/BaseModal.vue";
 import { usePwaInstall } from "@/composables/usePwaInstall";
@@ -7,7 +6,6 @@ import { useOnboarding } from "@/composables/useOnboarding";
 
 const cartStore = useCartStore();
 const filterStore = useFiltersStore();
-const router = useRouter();
 const { showInstallButton, installApp, isIOS, isAndroid, isInstallModalOpen } =
     usePwaInstall();
 const onboarding = useOnboarding();
@@ -36,15 +34,13 @@ function onHelpClick() {
 <template>
     <header class="pwa-header">
         <div class="header-top">
-            <div @click="router.push('/home')" class="brand">
-                <a @click.prevent href="/inicio">
-                    <img
-                        src="/logo_pharmatch_with_name.svg"
-                        alt="Pharmatch"
-                        class="brand-logo"
-                    />
-                </a>
-            </div>
+            <router-link to="/home" class="brand" aria-label="Ir al inicio">
+                <img
+                    src="/logo_pharmatch_with_name.svg"
+                    alt="Pharmatch"
+                    class="brand-logo"
+                />
+            </router-link>
             <div class="install-wrap">
                 <button
                     v-if="showInstallButton()"
@@ -156,6 +152,7 @@ function onHelpClick() {
     gap: 8px;
     color: var(--color-primary);
     cursor: pointer;
+    text-decoration: none;
 }
 
 .brand-logo {
